@@ -1,6 +1,8 @@
 package com.example.cruddemo.dao;
 
 import com.example.cruddemo.entity.Employee;
+import com.example.cruddemo.exception.BadRequestException;
+import com.example.cruddemo.exception.EmployeeNotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,10 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         // get employee
         Employee employee = entityManager.find(Employee.class, id);
 
+        if (employee == null) {
+            throw new EmployeeNotFoundException(id);
+        }
+
         // return employee
         return employee;
     }
@@ -53,6 +59,10 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     public void deleteById(int id) {
         // find employee by id
         Employee employee = entityManager.find(Employee.class, id);
+
+        if (employee == null) {
+            throw new EmployeeNotFoundException(id);
+        }
 
         // remove employee
         entityManager.remove(employee);
