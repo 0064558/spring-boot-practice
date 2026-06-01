@@ -45,4 +45,10 @@ public class EmployeeController {
         Employee savedEmployee = employeeService.save(employee);
         return ResponseEntity.ok(savedEmployee);
     }
+
+    @PutMapping("/employees")
+    public ResponseEntity<Employee> updateEmploye(@RequestBody Employee employee) {
+        Employee savedEmployee = employeeService.save(employee);
+        return ResponseEntity.ok(savedEmployee);
+    }
 }
