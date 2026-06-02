@@ -10,6 +10,7 @@ import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -31,9 +32,9 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees/{id}")
-    public ResponseEntity<Employee> findById(@PathVariable int id) {
+    public ResponseEntity<Optional<Employee>> findById(@PathVariable int id) {
 
-        Employee employee = employeeService.findById(id);
+        Optional<Employee> employee = employeeService.findById(id);
 
         return ResponseEntity.ok(employee);
     }
@@ -54,7 +55,7 @@ public class EmployeeController {
         return ResponseEntity.ok(savedEmployee);
     }
 
-    @PatchMapping("/employees/{id}")
+    /*@PatchMapping("/employees/{id}")
     public ResponseEntity<Employee> patchEmploye(@RequestBody Map<String, Object> patchPayload,
                                                  @PathVariable int id) {
         Employee tempEmployee = employeeService.findById(id);
@@ -74,11 +75,11 @@ public class EmployeeController {
         employeeService.save(patchedEmployee);
 
         return ResponseEntity.ok(patchedEmployee);
-    }
+    }*/
 
     @DeleteMapping("/employees/{id}")
     public ResponseEntity<Object> deleteEmployee(@PathVariable int id) {
-        Employee employee = employeeService.findById(id);
+        Optional<Employee> employee = employeeService.findById(id);
 
         employeeService.deleteById(id);
 
