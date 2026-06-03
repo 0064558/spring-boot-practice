@@ -14,6 +14,26 @@ import org.springframework.security.web.SecurityFilterChain;
 public class DemoSecurityConfig {
 
     @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(configurer ->
+                        configurer
+                                .requestMatchers(HttpMethod.GET, "/api/employees").hasRole("EMPLOYEE")
+                                .requestMatchers(HttpMethod.GET, "/api/employees/**").hasRole("EMPLOYEE")
+                                .requestMatchers(HttpMethod.POST, "/api/employees").hasRole("MANAGER")
+                                .requestMatchers(HttpMethod.PUT, "/api/employees").hasRole("MANAGER")
+                                .requestMatchers(HttpMethod.PATCH, "/api/employees/**").hasRole("MANAGER")
+                                .requestMatchers(HttpMethod.DELETE, "/api/employees/**").hasRole("ADMIN")
+                )
+                // use HTTP basic authentication
+                .httpBasic(Customizer.withDefaults())
+                // disable CSRF for testing purposes (not recommended for production)
+                // in general, CSRF protection is not required for stateless REST APIs that use HTTP basic or token authentication
+                .csrf(csrf -> csrf.disable());
+
+        return http.build();
+    }
+
+     /*@Bean
     public InMemoryUserDetailsManager userDetailsManager() {
         UserDetails john = User.builder()
                 .username("john")
@@ -34,24 +54,5 @@ public class DemoSecurityConfig {
                 .build();
 
         return new InMemoryUserDetailsManager(john, mary, susan);
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(configurer ->
-                        configurer
-                            .requestMatchers(HttpMethod.GET, "/api/employees").hasRole("EMPLOYEE")
-                            .requestMatchers(HttpMethod.GET, "/api/employees/**").hasRole("EMPLOYEE")
-                            .requestMatchers(HttpMethod.POST, "/api/employees").hasRole("MANAGER")
-                            .requestMatchers(HttpMethod.PUT, "/api/employees/**").hasRole("MANAGER")
-                            .requestMatchers(HttpMethod.DELETE, "/api/employees/**").hasRole("ADMIN")
-                )
-                // use HTTP basic authentication
-                .httpBasic(Customizer.withDefaults())
-                // disable CSRF for testing purposes (not recommended for production)
-                // in general, CSRF protection is not required for stateless REST APIs that use HTTP basic or token authentication
-                .csrf(csrf -> csrf.disable());
-
-        return http.build();
-    }
+    }*/
 }

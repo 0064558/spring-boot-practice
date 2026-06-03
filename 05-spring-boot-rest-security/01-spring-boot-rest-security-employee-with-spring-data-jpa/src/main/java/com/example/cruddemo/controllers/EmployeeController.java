@@ -55,13 +55,13 @@ public class EmployeeController {
         return ResponseEntity.ok(savedEmployee);
     }
 
-    /*@PatchMapping("/employees/{id}")
+    @PatchMapping("/employees/{id}")
     public ResponseEntity<Employee> patchEmploye(@RequestBody Map<String, Object> patchPayload,
                                                  @PathVariable int id) {
-        Employee tempEmployee = employeeService.findById(id);
+        Optional<Employee> tempEmployee = employeeService.findById(id);
 
         // throw exception if null
-        if (tempEmployee == null) {
+        if (!tempEmployee.isPresent()) {
             throw new RuntimeException("Employee id not found - " + id);
         }
 
@@ -70,12 +70,12 @@ public class EmployeeController {
             throw new RuntimeException("Employee id not allowed in request body - " + id);
         }
 
-        Employee patchedEmployee = jsonMapper.updateValue(tempEmployee, patchPayload);
+        Employee patchedEmployee = jsonMapper.updateValue(tempEmployee.get(), patchPayload);
 
         employeeService.save(patchedEmployee);
 
         return ResponseEntity.ok(patchedEmployee);
-    }*/
+    }
 
     @DeleteMapping("/employees/{id}")
     public ResponseEntity<Object> deleteEmployee(@PathVariable int id) {
