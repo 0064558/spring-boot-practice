@@ -3,12 +3,14 @@
 
 <head>
     <title>Hello World</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/styles/demo.css}" />
 </head>
 
 <body>
-    <h1>Hello World!</h1>
-    <p th:text="'Time on the server is ' + ${date}" class="funny" />
+    Student name: <span th:text="${param.studentName}" />
+
+<br><br>
+
+    The message: <span th:text="${message}" />
 </body>
 
 </html>
