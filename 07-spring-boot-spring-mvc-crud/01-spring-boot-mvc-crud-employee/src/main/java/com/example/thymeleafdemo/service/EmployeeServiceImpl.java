@@ -1,8 +1,8 @@
-package com.example.cruddemo.service;
+package com.example.thymeleafdemo.service;
 
-import com.example.cruddemo.entity.Employee;
-import com.example.cruddemo.exception.EmployeeNotFoundException;
-import com.example.cruddemo.repository.EmployeeRepository;
+import com.example.thymeleafdemo.entity.Employee;
+import com.example.thymeleafdemo.exception.EmployeeNotFoundException;
+import com.example.thymeleafdemo.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

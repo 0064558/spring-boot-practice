@@ -1,4 +1,4 @@
-package com.example.cruddemo.exception;
+package com.example.thymeleafdemo.exception;
 
 public class EmployeeNotFoundException extends RuntimeException {
     public EmployeeNotFoundException(int id) {

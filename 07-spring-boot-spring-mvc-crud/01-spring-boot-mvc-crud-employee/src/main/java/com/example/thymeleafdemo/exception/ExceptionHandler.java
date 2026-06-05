@@ -1,4 +1,4 @@
-package com.example.cruddemo.exception;
+package com.example.thymeleafdemo.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
