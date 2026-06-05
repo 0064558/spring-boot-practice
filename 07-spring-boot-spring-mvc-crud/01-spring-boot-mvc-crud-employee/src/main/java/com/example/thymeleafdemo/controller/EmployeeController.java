@@ -30,6 +30,16 @@ public class EmployeeController {
         // add to the spring model
         model.addAttribute("employees", employees);
 
-        return "list-employees";
+        return "employees/list-employees";
+    }
+
+    @GetMapping("/showFormForAdd")
+    public String showFormForAdd(Model model) {
+        // create model to atribute to bind form data
+        Employee employee = new Employee();
+
+        model.addAttribute("employee", employee);
+
+        return "employees/employee-form";
     }
 }
