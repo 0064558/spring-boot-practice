@@ -20,9 +20,16 @@ public class CruddemoApplication {
 		// Instructor instructor = new Instructor("Maria", "Brown", "maria@gmail.com");
 		// InstructorDetail instructorDetail = new InstructorDetail("Tráfico", "http>//www.luv2code.com/youtube");
 		return runner -> {
-			//createInstructor(appDAO, instructor, instructorDetail);
-			findInstructor(appDAO, 3);
+			// createInstructor(appDAO, instructor, instructorDetail);
+			// findInstructor(appDAO, 3);
+			deleteInstructor(appDAO, 2);
 		};
+	}
+
+	private void deleteInstructor(AppDAO appDAO, int id) {
+		System.out.println("Deleting Instructor: " + id);
+		appDAO.deleteInstructorByID(id);
+		System.out.println("Done!");
 	}
 
 	private void findInstructor(AppDAO appDAO, int id) {
