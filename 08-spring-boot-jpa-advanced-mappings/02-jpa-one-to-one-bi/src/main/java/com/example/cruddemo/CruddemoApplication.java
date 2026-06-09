@@ -8,6 +8,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.sql.SQLOutput;
+
 @SpringBootApplication
 public class CruddemoApplication {
 
@@ -22,8 +24,17 @@ public class CruddemoApplication {
 		return runner -> {
 			// createInstructor(appDAO, instructor, instructorDetail);
 			// findInstructor(appDAO, 3);
-			deleteInstructor(appDAO, 2);
+			// deleteInstructor(appDAO, 2);
+			findInstructorDetail(appDAO, 1);
 		};
+	}
+
+	private void findInstructorDetail(AppDAO appDAO, int id) {
+		System.out.println("Finding instructor detail id: " + id);
+		InstructorDetail instructorDetail = appDAO.findInstructorDetailById(id);
+		System.out.println("Instructor Detail: " + instructorDetail.toString());
+		System.out.println("Instructor: " + instructorDetail.getInstructor());
+		System.out.println("Done!");
 	}
 
 	private void deleteInstructor(AppDAO appDAO, int id) {
