@@ -2,6 +2,7 @@ package com.example.cruddemo.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -83,6 +84,14 @@ public class Instructor {
         return instructorDetail;
     }
 
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
     public void setInstructorDetail(InstructorDetail instructorDetail) {
         this.instructorDetail = instructorDetail;
     }
@@ -107,6 +116,18 @@ public class Instructor {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", instructorDetail=" + instructorDetail +
+                ", courses=" + courses +
                 '}';
+    }
+
+    // add convenience methods for bi-directional relationship
+    public void add(Course course) {
+        if (courses == null) {
+            courses = new ArrayList<>();
+        }
+
+        courses.add(course);
+
+        course.setInstructor(this);
     }
 }
