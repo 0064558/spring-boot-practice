@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.sql.SQLOutput;
+import java.util.List;
 
 @SpringBootApplication
 public class CruddemoApplication {
@@ -20,14 +21,14 @@ public class CruddemoApplication {
 
 	@Bean
 	public CommandLineRunner commandLineRunner(AppDAO appDAO) {
-		Instructor instructor = new Instructor("Testovaldo", "Brown", "test@gmail.com");
-		InstructorDetail instructorDetail = new InstructorDetail("Video Games", "http>//www.youtube.com");
+		/*Instructor instructor = new Instructor("Miserias", "Brown", "test@gmail.com");
+		InstructorDetail instructorDetail = new InstructorDetail("Muie", "http>//www.youtube.com");
 
-		Course course1 = new Course("Java POO", instructor);
-		Course course2 = new Course("Spring Boot", instructor);
+		Course course1 = new Course("AFSDFSD", instructor);
+		Course course2 = new Course("asfafadsfds", instructor);
 
 		instructor.add(course1);
-		instructor.add(course2);
+		instructor.add(course2);*/
 		return runner -> {
 			// createInstructor(appDAO, instructor, instructorDetail);
 			// findInstructor(appDAO, 3);
@@ -35,8 +36,35 @@ public class CruddemoApplication {
 			// findInstructorDetail(appDAO, 1);
 			// deleteInstructorDetail(appDAO, 4);
 			// createInstructorWithCourses(appDAO, instructor, instructorDetail);
-			findInstructorWithCourses(appDAO, 1);
+			// findInstructorWithCourses(appDAO, 1);
+			// findCoursesForInstructor(appDAO, 1);
+			 findInstructorWithCoursesJoinFetch(appDAO, 1);
 		};
+	}
+
+	private void findInstructorWithCoursesJoinFetch(AppDAO appDAO, int id) {
+		System.out.println("Finding Instructor id: " + id);
+		Instructor instructor = appDAO.findInstructorByIdJoinFetch(id);
+
+		System.out.println("Instructor: " + instructor.toString());
+		System.out.println("Courses associated: " + instructor.getCourses());
+		System.out.println("Done!");
+	}
+
+	private void findCoursesForInstructor(AppDAO appDAO, int id) {
+		System.out.println("Finding Instructor id: " + id);
+		Instructor instructor = appDAO.findInstructorById(id);
+		System.out.println("Instructor: " + instructor.toString());
+
+		// find courses for instructor
+		System.out.println("Finding courses for instructor id: " + id);
+		List<Course> courseList = appDAO.findCoursesByInstructorId(id);
+
+		// associate the objects
+		instructor.setCourses(courseList);
+
+		System.out.println("Courses: " + instructor.getCourses());
+		System.out.println("Done!");
 	}
 
 	private void findInstructorWithCourses(AppDAO appDAO, int id) {
