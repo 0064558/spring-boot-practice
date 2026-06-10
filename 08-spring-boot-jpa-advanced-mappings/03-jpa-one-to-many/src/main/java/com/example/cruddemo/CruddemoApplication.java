@@ -1,6 +1,7 @@
 package com.example.cruddemo;
 
 import com.example.cruddemo.dao.AppDAO;
+import com.example.cruddemo.entity.Course;
 import com.example.cruddemo.entity.Instructor;
 import com.example.cruddemo.entity.InstructorDetail;
 import org.springframework.boot.CommandLineRunner;
@@ -19,15 +20,43 @@ public class CruddemoApplication {
 
 	@Bean
 	public CommandLineRunner commandLineRunner(AppDAO appDAO) {
-		Instructor instructor = new Instructor("Maria", "Brown", "maria@gmail.com");
-		InstructorDetail instructorDetail = new InstructorDetail("Tráfico", "http>//www.luv2code.com/youtube");
+		Instructor instructor = new Instructor("Testovaldo", "Brown", "test@gmail.com");
+		InstructorDetail instructorDetail = new InstructorDetail("Video Games", "http>//www.youtube.com");
+
+		Course course1 = new Course("Java POO", instructor);
+		Course course2 = new Course("Spring Boot", instructor);
+
+		instructor.add(course1);
+		instructor.add(course2);
 		return runner -> {
 			// createInstructor(appDAO, instructor, instructorDetail);
 			// findInstructor(appDAO, 3);
 			// deleteInstructor(appDAO, 2);
 			// findInstructorDetail(appDAO, 1);
-			deleteInstructorDetail(appDAO, 4);
+			// deleteInstructorDetail(appDAO, 4);
+			// createInstructorWithCourses(appDAO, instructor, instructorDetail);
+			findInstructorWithCourses(appDAO, 1);
 		};
+	}
+
+	private void findInstructorWithCourses(AppDAO appDAO, int id) {
+		System.out.println("Finding Instructor id: " + id);
+
+		Instructor instructor = appDAO.findInstructorById(id);
+
+		System.out.println("Instructor: " + instructor.toString());
+		System.out.println("Associated Courses: " + instructor.getCourses());
+		System.out.println("Done!");
+	}
+
+	private void createInstructorWithCourses(AppDAO appDAO, Instructor instructor, InstructorDetail instructorDetail) {
+		// associate the objects
+		instructor.setInstructorDetail(instructorDetail);
+
+		System.out.println("Saving instructor: " + instructor);
+		System.out.println("The courses: " + instructor.getCourses());
+		appDAO.save(instructor);
+		System.out.println("Done!");
 	}
 
 	private void deleteInstructorDetail(AppDAO appDAO, int id) {
