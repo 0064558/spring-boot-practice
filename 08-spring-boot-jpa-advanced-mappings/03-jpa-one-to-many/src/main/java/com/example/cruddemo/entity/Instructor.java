@@ -69,8 +69,9 @@ public class Instructor {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public Instructor setLastName(String lastName) {
         this.lastName = lastName;
+        return null;
     }
 
     public String getEmail() {

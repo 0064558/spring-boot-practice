@@ -29,6 +29,9 @@ public class CruddemoApplication {
 
 		instructor.add(course1);
 		instructor.add(course2);*/
+
+		Instructor instructor = new Instructor();
+
 		return runner -> {
 			// createInstructor(appDAO, instructor, instructorDetail);
 			// findInstructor(appDAO, 3);
@@ -38,8 +41,21 @@ public class CruddemoApplication {
 			// createInstructorWithCourses(appDAO, instructor, instructorDetail);
 			// findInstructorWithCourses(appDAO, 1);
 			// findCoursesForInstructor(appDAO, 1);
-			 findInstructorWithCoursesJoinFetch(appDAO, 1);
+			// findInstructorWithCoursesJoinFetch(appDAO, 1);
+			updateInstructor(appDAO, 1);
 		};
+	}
+
+	private void updateInstructor(AppDAO appDAO, int id) {
+		System.out.println("Updating Instructor id: " + id);
+		Instructor instructor = appDAO.findInstructorById(id);
+		System.out.println(instructor);
+
+		instructor.setLastName("Teste");
+
+		appDAO.update(instructor);
+		System.out.println("Done!");
+		System.out.println("Update Instructor: " + instructor.toString());
 	}
 
 	private void findInstructorWithCoursesJoinFetch(AppDAO appDAO, int id) {
