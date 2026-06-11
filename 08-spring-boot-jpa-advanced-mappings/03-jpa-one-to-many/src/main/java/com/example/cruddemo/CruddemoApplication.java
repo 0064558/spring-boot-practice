@@ -42,8 +42,22 @@ public class CruddemoApplication {
 			// findInstructorWithCourses(appDAO, 1);
 			// findCoursesForInstructor(appDAO, 1);
 			// findInstructorWithCoursesJoinFetch(appDAO, 1);
-			updateInstructor(appDAO, 1);
+			// updateInstructor(appDAO, 1);
+			// updateCourse(appDAO, 5);
+			deleteInstructor(appDAO, 4);
 		};
+	}
+
+	private void updateCourse(AppDAO appDAO, int id) {
+		System.out.println("Updating Course with id: " + id);
+		Course course = appDAO.findCourseById(id);
+		System.out.println(course);
+
+		// edita o novo campo
+		course.setTitle("IA");
+
+		appDAO.update(course);
+		System.out.println("Update Course" + course);
 	}
 
 	private void updateInstructor(AppDAO appDAO, int id) {
@@ -51,10 +65,10 @@ public class CruddemoApplication {
 		Instructor instructor = appDAO.findInstructorById(id);
 		System.out.println(instructor);
 
+		// edita o novo campo
 		instructor.setLastName("Teste");
 
 		appDAO.update(instructor);
-		System.out.println("Done!");
 		System.out.println("Update Instructor: " + instructor.toString());
 	}
 
