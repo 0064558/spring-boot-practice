@@ -35,8 +35,15 @@ public class CruddemoApplication {
 
 		return runner -> {
 			// createCourseAndReviews(appDAO);
-			retrieveCourseAndReviews(appDAO, 1);
+			// retrieveCourseAndReviews(appDAO, 1);
+			deleteCourseAndReviews(appDAO, 1);
 		};
+	}
+
+	private void deleteCourseAndReviews(AppDAO appDAO, int id) {
+		System.out.println("Deleting course with id: " + id);
+		appDAO.deleteCourseById(id);
+		System.out.println("Done!");
 	}
 
 	private void retrieveCourseAndReviews(AppDAO appDAO, int id) {
