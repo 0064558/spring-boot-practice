@@ -34,8 +34,20 @@ public class CruddemoApplication {
 		Instructor instructor = new Instructor();
 
 		return runner -> {
-			createCourseAndReviews(appDAO);
+			// createCourseAndReviews(appDAO);
+			retrieveCourseAndReviews(appDAO, 1);
 		};
+	}
+
+	private void retrieveCourseAndReviews(AppDAO appDAO, int id) {
+		// get the course and reviews
+		Course course = appDAO.findCourseAndReviwesByCourseId(id);
+
+		// print the course
+		System.out.println(course);
+
+		// print the reviews
+		System.out.println(course.getReviews());
 	}
 
 	private void createCourseAndReviews(AppDAO appDAO) {
@@ -56,6 +68,5 @@ public class CruddemoApplication {
 
 		System.out.println("Done!");
 	}
-
 
 }
