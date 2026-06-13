@@ -28,6 +28,10 @@ public class Review {
         this.course = course;
     }
 
+    public Review(String comment) {
+        this.comment = comment;
+    }
+
     // define getter/setter
 
     public int getId() {

@@ -4,6 +4,7 @@ import com.example.cruddemo.dao.AppDAO;
 import com.example.cruddemo.entity.Course;
 import com.example.cruddemo.entity.Instructor;
 import com.example.cruddemo.entity.InstructorDetail;
+import com.example.cruddemo.entity.Review;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -33,10 +34,28 @@ public class CruddemoApplication {
 		Instructor instructor = new Instructor();
 
 		return runner -> {
-
+			createCourseAndReviews(appDAO);
 		};
 	}
 
+	private void createCourseAndReviews(AppDAO appDAO) {
+		// create a course
+		Course course = new Course("Pacman");
+
+		// add some reviews
+		course.addReview(new Review("Greatful Course!"));
+		course.addReview(new Review("Good Course!"));
+		course.addReview(new Review("Bad Course :("));
+
+		// save the courssout
+		System.out.println("Saving the course...");
+		appDAO.saveCourse(course);
+
+		System.out.println(course);
+		System.out.println(course.getReviews());
+
+		System.out.println("Done!");
+	}
 
 
 }

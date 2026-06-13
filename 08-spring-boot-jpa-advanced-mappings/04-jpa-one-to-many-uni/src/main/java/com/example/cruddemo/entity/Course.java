@@ -38,6 +38,10 @@ public class Course {
         this.instructor = instructor;
     }
 
+    public Course(String title) {
+        this.title = title;
+    }
+
     public int getId() {
         return id;
     }
