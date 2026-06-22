@@ -22,7 +22,9 @@ public class Student {
     @Column(name = "email")
     private String email;
 
-
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH},
+    mappedBy = "students")
+    // não precisa de Join Table
     private List<Course> courses;
 
     public Student() {}
