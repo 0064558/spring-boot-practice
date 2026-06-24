@@ -23,6 +23,10 @@ public class AopdemoApplication {
 	private void demoTheBeforeAdvice(AccountDAO accountDAO) {
 		// call the business method
 		accountDAO.addAccount();
+
+		// do it again!
+		System.out.println("\n Let's call it again!\n");
+		accountDAO.addAccount();
 	}
 
 }
