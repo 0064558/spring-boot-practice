@@ -1,6 +1,7 @@
 package com.example.aopdemo;
 
 import com.example.aopdemo.dao.AccountDAO;
+import com.example.aopdemo.dao.MembershipDAO;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,19 +15,19 @@ public class AopdemoApplication {
 	}
 
 	@Bean
-	public CommandLineRunner commandLineRunner(AccountDAO accountDAO) {
+	public CommandLineRunner commandLineRunner(AccountDAO accountDAO, MembershipDAO membershipDAO) {
 		return runner -> {
-			demoTheBeforeAdvice(accountDAO);
+			demoTheBeforeAdvice(accountDAO, membershipDAO);
 		};
 	}
 
-	private void demoTheBeforeAdvice(AccountDAO accountDAO) {
+	private void demoTheBeforeAdvice(AccountDAO accountDAO, MembershipDAO membershipDAO) {
+
 		// call the business method
 		accountDAO.addAccount();
 
-		// do it again!
-		System.out.println("\n Let's call it again!\n");
-		accountDAO.addAccount();
+		// call the membership business method
+		membershipDAO.addAccount();
 	}
 
 }
