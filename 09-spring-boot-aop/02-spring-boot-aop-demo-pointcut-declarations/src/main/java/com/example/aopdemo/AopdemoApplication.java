@@ -25,6 +25,8 @@ public class AopdemoApplication {
 
 		// call the business method
 		Account account = new Account();
+		account.setName("John");
+		account.setLevel("Platinum");
 		accountDAO.addAccount(account, true);
 		accountDAO.doWork();
 
