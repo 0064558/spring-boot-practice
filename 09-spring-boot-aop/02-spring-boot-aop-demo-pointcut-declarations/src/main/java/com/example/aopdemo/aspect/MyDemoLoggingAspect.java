@@ -1,5 +1,6 @@
 package com.example.aopdemo.aspect;
 
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.core.annotation.Order;
@@ -14,8 +15,11 @@ public class MyDemoLoggingAspect {
     // let's start with an @Before advice
 
     @Before("com.example.aopdemo.aspect.LuvAopExpressions.forDaoPackageNoGetterSetter()")
-    public void beforeAddAccountAdvice() {
-        System.out.println("\n====>>> Executing @Before advice on addAccount()");
+    public void beforeAddAccountAdvice(JoinPoint theJoinPoint) {
+        System.out.println("\n====>>> Executing @Before advice on method");
+
+        // display the method signature
+        System.out.println("Method: " + theJoinPoint.getSignature().toShortString());
     }
 
 }
