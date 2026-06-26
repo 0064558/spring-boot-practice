@@ -54,6 +54,5 @@ public class DemoLoggingAspect {
 
         // display data returned
         logger.info("=====> result: " + result);
-
     }
 }
