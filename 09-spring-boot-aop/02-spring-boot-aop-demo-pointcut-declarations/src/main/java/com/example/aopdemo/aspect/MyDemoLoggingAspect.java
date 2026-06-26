@@ -96,17 +96,29 @@ public class MyDemoLoggingAspect {
         System.out.println("\n=====>>> Executing @Around on method: " + method);
 
         // get begin timestamp
-        long begin = System.currentTimeMillis();
+        // long begin = System.currentTimeMillis();
+        long begin = System.nanoTime();
 
         // now, lets execute the method
-        Object result = proceedingJoinPoint.proceed();
+        Object result = null;
+
+        try {
+            result = proceedingJoinPoint.proceed();
+        } catch (Exception exc) {
+            // log the exception
+            System.out.println(exc.getMessage());
+
+            // give user a custom message
+            result = "Major acident!";
+        }
 
         // get the end timestamp
-        long end = System.currentTimeMillis();
+        // long end = System.currentTimeMillis();
+        long end = System.nanoTime();
 
         // compute duration and display it
         long duration = end - begin;
-        System.out.println("\n====> Duration: " + duration / 1000.0 + " seconds");
+        System.out.println("\n====> Duration: " + duration + " nano seconds");
 
         return result;
     }
