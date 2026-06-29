@@ -43,8 +43,10 @@ public class DemoUtils {
     public Boolean isGreater(int n1, int n2) {
         if (n1 > n2) {
             return true;
+        } else {
+            return false;
         }
-        return false;
+
     }
 
     public String throwException(int a) throws Exception {
