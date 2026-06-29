@@ -2,6 +2,9 @@ package com.luv2code.junitdemo;
 
 import org.junit.jupiter.api.*;
 
+import java.time.Duration;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -49,6 +52,44 @@ public class DemoUtilsTest {
 
         assertTrue(demoUtils.isGreater(n2, n1), "This should return true");
         assertFalse(demoUtils.isGreater(n1, n2), "This should return false");
+    }
+
+    @DisplayName("Array Equals")
+    @Test
+    void testArrayEquals() {
+        String[] stringArray = {"A", "B", "C"};
+
+        assertArrayEquals(stringArray, demoUtils.getFirstThreeLettersOfAlphabet(), "Array should be the same");
+    }
+
+    @DisplayName("Iterable Equals")
+    @Test
+    void testIterableEquals() {
+        List<String> list = List.of("luv", "2", "code");
+
+        assertIterableEquals(list, demoUtils.getAcademyInList(), "Expect list should be the same");
+    }
+
+    @DisplayName("Lines Match")
+    @Test
+    void testLinesMatch() {
+        List<String> list = List.of("luv", "2", "code");
+
+        assertLinesMatch(list, demoUtils.getAcademyInList(), "Lines should match");
+    }
+
+    @DisplayName("Throws and Does Not Throw")
+    @Test
+    void testThrowsAndDoesNotThrow() {
+        assertThrows(Exception.class, () -> {demoUtils.throwException(-1);}, "Should throw exception");
+
+        assertDoesNotThrow(() -> {demoUtils.throwException(5);}, "Should not throw exception");
+    }
+
+    @DisplayName("Timeout")
+    @Test
+    void testTimeOut() {
+        assertTimeoutPreemptively(Duration.ofSeconds(3), () -> {demoUtils.checkTimeout();}, "method should execute in 3 seconds");
     }
 
     /*@AfterEach
