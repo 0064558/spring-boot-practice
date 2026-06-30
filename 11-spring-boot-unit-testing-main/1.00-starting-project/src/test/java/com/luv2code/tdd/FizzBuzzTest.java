@@ -29,4 +29,22 @@ class FizzBuzzTest {
 
         assertEquals(expected, FizzBuzz.fizzBuzz(5), "Should print Buzz for numbers divisible by 5");
     }
+
+    @DisplayName("Divisible by Three And Five")
+    @Test
+    @Order(3)
+    void testForDivisibleByThreeAndFive() {
+        String expected = "FizzBuzz";
+
+        assertEquals(expected, FizzBuzz.fizzBuzz(15), "Should print FizzBuzz for numbers divisible by 3 and 5");
+    }
+
+    @DisplayName("NOT Divisible by Three or Five")
+    @Test
+    @Order(4)
+    void testForNotDivisibleByThreeAndFive() {
+        String expected = "1";
+
+        assertEquals(expected, FizzBuzz.fizzBuzz(1), "Should print the number for numbers not divisible by 3 or 5");
+    }
 }
