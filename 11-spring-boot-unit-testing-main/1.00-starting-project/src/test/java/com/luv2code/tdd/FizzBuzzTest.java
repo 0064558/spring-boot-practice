@@ -1,6 +1,8 @@
 package com.luv2code.tdd;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -46,5 +48,29 @@ class FizzBuzzTest {
         String expected = "1";
 
         assertEquals(expected, FizzBuzz.fizzBuzz(1), "Should print the number for numbers not divisible by 3 or 5");
+    }
+
+    @DisplayName("Testing with small data file")
+    @ParameterizedTest(name = "value={0}, expected={1}")
+    @CsvFileSource(resources = "/small-test-data.csv")
+    @Order(5)
+    void testWithSmallTestData(int value, String expected) {
+        assertEquals(expected, FizzBuzz.fizzBuzz(value), "Should print the number for numbers not divisible by 3 or 5");
+    }
+
+    @DisplayName("Testing with medium data file")
+    @ParameterizedTest(name = "value={0}, expected={1}")
+    @CsvFileSource(resources = "/medium-test-data.csv")
+    @Order(6)
+    void testWithMediumTestData(int value, String expected) {
+        assertEquals(expected, FizzBuzz.fizzBuzz(value), "Should print the number for numbers not divisible by 3 or 5");
+    }
+
+    @DisplayName("Testing with large data file")
+    @ParameterizedTest(name = "value={0}, expected={1}")
+    @CsvFileSource(resources = "/large-test-data.csv")
+    @Order(7)
+    void testWithLargeTestData(int value, String expected) {
+        assertEquals(expected, FizzBuzz.fizzBuzz(value), "Should print the number for numbers not divisible by 3 or 5");
     }
 }
