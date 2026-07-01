@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +37,9 @@ public class ApplicationExampleTest {
 
     @Autowired
     StudentGrades studentGrades;
+
+    @Autowired
+    ApplicationContext applicationContext;
 
     @BeforeEach
     public void beforeEach() {
@@ -77,5 +81,35 @@ public class ApplicationExampleTest {
     @Test
     public void checkNullForStudentGrades() {
         assertNotNull(studentGrades.checkNull(student.getStudentGrades().getMathGradeResults()), "object should not be null");
+    }
+
+    @DisplayName("Create student without grade init")
+    @Test
+    public void createStudentWithoutGradesInit() {
+        CollegeStudent student2 = applicationContext.getBean("collegeStudent", CollegeStudent.class);
+        student2.setFirstname("Giga");
+        student2.setLastname("Chad");
+        student2.setEmailAddress("chad@gmail.com");
+        assertNotNull(student2);
+        assertNotNull(student2.getFirstname());
+        assertNotNull(student2.getLastname());
+        assertNotNull(student2.getEmailAddress());
+
+    }
+
+    @DisplayName("Verify students are prototypes")
+    @Test
+    public void verifyStudentsArePrototypes() {
+        CollegeStudent student2 = applicationContext.getBean("collegeStudent", CollegeStudent.class);
+        assertNotSame(student, student2);
+    }
+
+    @DisplayName("Find Grade Point Average")
+    @Test
+    public void findGradePointAverage() {
+        assertAll(() -> assertEquals(91.67, studentGrades.findGradePointAverage(
+                        student.getStudentGrades().getMathGradeResults())),
+                () -> assertEquals(91.67, studentGrades.findGradePointAverage(
+                        student.getStudentGrades().getMathGradeResults())));
     }
 }
