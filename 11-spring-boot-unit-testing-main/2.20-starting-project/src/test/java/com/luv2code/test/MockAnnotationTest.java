@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.List;
 
@@ -22,23 +23,28 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = MvcTestingExampleApplication.class)
 public class MockAnnotationTest {
+    // injeta o contexto da aplicação no teste, permitindo que você acesse os beans do Spring e suas dependências
     @Autowired
     ApplicationContext context;
 
+    // injeta o bean CollegeStudent no teste, permitindo que você acesse e modifique os atributos do estudante durante os testes
     @Autowired
     CollegeStudent student;
 
+    // injeta o bean StudentGrades no teste, permitindo que você acesse e modifique os resultados de notas do estudante durante os testes
     @Autowired
     StudentGrades studentGrades;
 
-    @Mock
+    /* cria um mock do ApplicationDao, permitindo que você simule o comportamento do DAO sem depender de uma implementação real
+    @Mock*/
+    @MockitoBean // cria um mock do ApplicationDao, e permite usar o @Autowired para injetar o mock no ApplicationService
     private ApplicationDao applicationDao;
 
-    // injeta dependencias de mock no applicationService
     // @InjectMocks cria uma instância de ApplicationService e injeta o mock applicationDao nele
     // isso permite que você teste o ApplicationService sem depender de uma implementação real do ApplicationDao
     // apenas injeta dependencias anotadas com @Mock ou @Spy no objeto anotado com @InjectMocks
-    @InjectMocks
+    //@InjectMocks
+    @Autowired // mockitoBean já injeta o mock no ApplicationService, então não é necessário usar @InjectMocks
     private ApplicationService applicationService;
 
     // o método beforeEach() é executado antes de cada teste, garantindo que o estado do teste seja limpo e consistente
@@ -67,5 +73,13 @@ public class MockAnnotationTest {
         // verify
         // verifica se o método addGradeResultsForSingleClass() do mock applicationDao foi chamado
         verify(applicationDao).addGradeResultsForSingleClass(studentGrades.getMathGradeResults());
+    }
+
+    @DisplayName("Find GPA")
+    @Test
+    public void assertEqualsTestFindGpa() {
+        when(applicationDao.findGradePointAverage(studentGrades.getMathGradeResults())).thenReturn(88.31);
+        assertEquals(88.31, applicationService.findGradePointAverage(student.getStudentGrades().getMathGradeResults()));
+        verify(applicationDao).findGradePointAverage(studentGrades.getMathGradeResults());
     }
 }
