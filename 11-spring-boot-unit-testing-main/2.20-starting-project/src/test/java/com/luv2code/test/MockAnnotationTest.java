@@ -17,7 +17,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -77,9 +77,40 @@ public class MockAnnotationTest {
 
     @DisplayName("Find GPA")
     @Test
+    // verifica se o método findGradePointAverage() da classe ApplicationService está funcionando corretamente
     public void assertEqualsTestFindGpa() {
+        // set up -> execute -> assert -> verify
+
+        // set up
+        // configura o mock applicationDao para retornar 88.31 quando o método findGradePointAverage() for chamado
         when(applicationDao.findGradePointAverage(studentGrades.getMathGradeResults())).thenReturn(88.31);
+
+        // execute and assert
+        // chama o método findGradePointAverage() do applicationService com os resultados de notas de Mat do estudante, o esperado é que ele retorne 88.31, pois o mock applicationDao foi configurado para retornar esse valor
         assertEquals(88.31, applicationService.findGradePointAverage(student.getStudentGrades().getMathGradeResults()));
+
+        // verify
+        // verifica se o método findGradePointAverage() do mock applicationDao foi chamado
         verify(applicationDao).findGradePointAverage(studentGrades.getMathGradeResults());
+    }
+
+    @DisplayName("Not Null")
+    @Test
+    // verifica se o método checkNull() da classe ApplicationService está funcionando corretamente
+    public void testAssertNotNull() {
+        // set up -> execute -> assert -> verify
+
+        // set up
+        // configura o mock applicationDao para retornar true quando o método checkNull() for chamado com os resultados de notas de matemática do estudante
+        when(applicationDao.checkNull(studentGrades.getMathGradeResults())).thenReturn(true);
+
+        // execute and assert
+        // chama o método checkNull() do applicationService com os resultados de notas de matemática do estudante, o esperado é que ele retorne true, pois o mock applicationDao foi configurado para retornar esse valor
+        // verifica se o objeto retornado pelo método checkNull() do applicationService não é nulo
+        assertNotNull(applicationService.checkNull(student.getStudentGrades().getMathGradeResults()), "Object should be not null");
+
+        // verify
+        // verifica se o método checkNull() do mock applicationDao foi chamado
+        verify(applicationDao).checkNull(studentGrades.getMathGradeResults());
     }
 }
