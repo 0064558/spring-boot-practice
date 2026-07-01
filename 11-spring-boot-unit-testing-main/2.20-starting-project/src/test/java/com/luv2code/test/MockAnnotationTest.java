@@ -18,8 +18,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = MvcTestingExampleApplication.class)
 public class MockAnnotationTest {
@@ -37,7 +36,8 @@ public class MockAnnotationTest {
 
     /* cria um mock do ApplicationDao, permitindo que você simule o comportamento do DAO sem depender de uma implementação real
     @Mock*/
-    @MockitoBean // cria um mock do ApplicationDao, e permite usar o @Autowired para injetar o mock no ApplicationService
+    @MockitoBean
+    // cria um mock do ApplicationDao, e permite usar o @Autowired para injetar o mock no ApplicationService
     private ApplicationDao applicationDao;
 
     // @InjectMocks cria uma instância de ApplicationService e injeta o mock applicationDao nele
@@ -112,5 +112,55 @@ public class MockAnnotationTest {
         // verify
         // verifica se o método checkNull() do mock applicationDao foi chamado
         verify(applicationDao).checkNull(studentGrades.getMathGradeResults());
+    }
+
+    @DisplayName("Throw RuntimeException")
+    @Test
+    // verifica se o método checkNull() da classe ApplicationService lança uma exceção quando o objeto passado é nulo
+    public void testThrowRuntimeException() {
+        // set up -> execute -> assert -> verify
+
+        // cria um objeto CollegeStudent nulo usando o contexto da aplicação
+        CollegeStudent nullStudent = (CollegeStudent) context.getBean("collegeStudent");
+
+        // set up
+        // configura o mock applicationDao para lançar uma exceção RuntimeException quando o método checkNull() for chamado com o objeto nulo
+        doThrow(new RuntimeException()).when(applicationDao).checkNull(nullStudent);
+
+        // execute and assert
+        // chama o método checkNull() do applicationService com o objeto nulo, o esperado é que ele lance uma exceção RuntimeException, pois o mock applicationDao foi configurado para lançar essa exceção
+        assertThrows(RuntimeException.class, () -> {
+            applicationService.checkNull(nullStudent);
+        });
+
+        // verify
+        // verifica se o método checkNull() do mock applicationDao foi chamado com o objeto nulo
+        verify(applicationDao, times(1)).checkNull(nullStudent);
+    }
+
+    @DisplayName("Multiple Calls")
+    @Test
+    // verifica se o método checkNull() da classe ApplicationService lança uma exceção na primeira chamada e retorna um valor na segunda chamada
+    public void testMultipleCalls() {
+        // set up -> execute -> assert -> verify
+
+        // cria um objeto CollegeStudent nulo usando o contexto da aplicação
+        CollegeStudent nullStudent = (CollegeStudent) context.getBean("collegeStudent");
+
+        // set up
+        // configura o mock applicationDao para lançar uma exceção RuntimeException na primeira chamada e retornar uma string na segunda chamada quando o método checkNull() for chamado com o objeto nulo
+        when(applicationDao.checkNull(nullStudent)).thenThrow(new RuntimeException()).thenReturn("Do not throw exception second time");
+
+        // execute
+        // chama o método checkNull() do applicationService com o objeto nulo, o esperado é que ele lance uma exceção RuntimeException na primeira chamada
+        assertThrows(RuntimeException.class, () -> {
+            applicationService.checkNull(nullStudent);
+        });
+
+        // chama o método checkNull() do applicationService com o objeto nulo novamente, o esperado é que ele retorne a string configurada para a segunda chamada
+        assertEquals("Do not throw exception second time", applicationService.checkNull(nullStudent));
+
+        // verify
+        verify(applicationDao, times(2)).checkNull(nullStudent);
     }
 }
