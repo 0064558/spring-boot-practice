@@ -1,0 +1,41 @@
+package com.luv2code.springmvc.service;
+
+import com.luv2code.springmvc.models.CollegeStudent;
+import com.luv2code.springmvc.repository.StudentDao;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+@Transactional
+public class StudentAndGradeService {
+
+    StudentDao studentDao;
+
+    // Injetando o StudentDao no construtor da classe StudentAndGradeService
+    @Autowired
+    public StudentAndGradeService(StudentDao studentDao) {
+        this.studentDao = studentDao;
+    }
+
+
+    public void createStudent(String firstName, String lastName, String emailAddress) {
+        CollegeStudent student = new CollegeStudent(firstName, lastName, emailAddress);
+        student.setId(0);
+        studentDao.save(student);
+    }
+
+    public boolean checkIfStudentIsNull(int id) {
+        Optional<CollegeStudent> student = studentDao.findById(id);
+
+        if (student.isPresent()) {
+            return true;
+        } else {
+            return false;
+        }
+
+
+    }
+}
