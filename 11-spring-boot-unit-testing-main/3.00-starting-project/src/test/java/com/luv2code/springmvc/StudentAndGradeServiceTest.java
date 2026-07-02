@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,6 +74,20 @@ public class StudentAndGradeServiceTest {
 
         // Verificando se o estudante foi deletado corretamente do banco de dados
         assertFalse(deletedStudent.isPresent(), "Return false if student is not present");
+    }
+
+    @Test
+    // Teste para verificar se o método getGradebook está funcionando corretamente
+    public void getGradebookService() {
+        // Recuperando todos os estudantes do banco de dados usando o serviço
+        Iterable<CollegeStudent> collegeStudentIterable = studentService.getGradebook();
+        List<CollegeStudent> collegeStudents = new ArrayList<>();
+
+        for (CollegeStudent student : collegeStudentIterable) {
+            collegeStudents.add(student);
+        }
+
+        assertEquals(1, collegeStudents.size(), "Find one student");
     }
 
     @AfterEach
