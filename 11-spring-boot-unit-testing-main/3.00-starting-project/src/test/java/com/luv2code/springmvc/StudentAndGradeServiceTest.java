@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,18 +77,22 @@ public class StudentAndGradeServiceTest {
         assertFalse(deletedStudent.isPresent(), "Return false if student is not present");
     }
 
+    @Sql("/insertData.sql")
     @Test
     // Teste para verificar se o método getGradebook está funcionando corretamente
     public void getGradebookService() {
         // Recuperando todos os estudantes do banco de dados usando o serviço
         Iterable<CollegeStudent> collegeStudentIterable = studentService.getGradebook();
+        // Convertendo o Iterable para uma lista para facilitar a verificação
         List<CollegeStudent> collegeStudents = new ArrayList<>();
 
+        // Adicionando todos os estudantes do Iterable para a lista
         for (CollegeStudent student : collegeStudentIterable) {
             collegeStudents.add(student);
         }
 
-        assertEquals(1, collegeStudents.size(), "Find one student");
+        // Verificando se há apenas um estudante no banco de dados
+        assertEquals(6, collegeStudents.size(), "Find one student");
     }
 
     @AfterEach
