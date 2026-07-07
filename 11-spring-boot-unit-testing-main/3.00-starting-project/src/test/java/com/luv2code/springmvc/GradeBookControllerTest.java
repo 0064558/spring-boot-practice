@@ -24,8 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -51,7 +50,7 @@ public class GradeBookControllerTest {
 
     // Mock do serviço StudentAndGradeServiceTest para ser usado nos testes do controlador
     @Mock
-    private StudentAndGradeService studentAndGradeServiceMock;
+    private StudentAndGradeService studentCreateServiceMock;
 
     @BeforeAll
     public static void setup() {
@@ -78,10 +77,10 @@ public class GradeBookControllerTest {
         students.add(student2);
 
         // Mockando o método getGradebook() do serviço StudentAndGradeService para retornar a lista de estudantes criada acima
-        when(studentAndGradeServiceMock.getGradebook()).thenReturn(students);
+        when(studentCreateServiceMock.getGradebook()).thenReturn(students);
 
         // Verificando se o método getGradebook() do serviço retorna a lista de estudantes esperada
-        assertIterableEquals(students, studentAndGradeServiceMock.getGradebook());
+        assertIterableEquals(students, studentCreateServiceMock.getGradebook());
 
         // Simulando uma requisição HTTP GET para o endpoint "/" do controlador e verificando se o status da resposta é 200 OK
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/"))
@@ -96,6 +95,15 @@ public class GradeBookControllerTest {
     @Test
     // Teste para criar um estudante via requisição HTTP POST e verificar se ele foi salvo corretamente no banco de dados
     public void createStudentHttpRequest() throws Exception {
+        CollegeStudent student1 = new CollegeStudent("Eric", "Roby", "eric.roby@luv2code_school.com");
+
+        List<CollegeStudent> students = new ArrayList<>();
+        students.add(student1);
+
+        when(studentCreateServiceMock.getGradebook()).thenReturn(students);
+
+        assertIterableEquals(students, studentCreateServiceMock.getGradebook());
+
         MvcResult mvcResult = this.mockMvc.perform(post("/")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("firstname", "Eric")
@@ -111,6 +119,27 @@ public class GradeBookControllerTest {
         CollegeStudent verifyStudent = studentDao.findByEmailAddress("eric.roby@luv2code_school.com");
 
         assertNotNull(verifyStudent, "Student should not be null");
+    }
+
+    @Test
+    // Teste para deletar um estudante via requisição HTTP GET e verificar se ele foi removido corretamente do banco de dados
+    public void deleteStudentHttpRequest() throws Exception {
+        // Verificando se o estudante com id 1 está presente no banco de dados antes de deletar
+        assertTrue(studentDao.findById(1).isPresent());
+
+        // Simulando uma requisição HTTP GET para o endpoint "/delete/student/{id}" do controlador e verificando se o status da resposta é 200 OK
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.delete("/delete/student/{id}", 1))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        // Verificando se a view retornada é "index" e se o estudante com id 1 não está mais presente no banco de dados após a deleção
+        ModelAndView mav = mvcResult.getModelAndView();
+
+        // Verificando se a view retornada é "index"
+        ModelAndViewAssert.assertViewName(mav, "index");
+
+        // Verificando se o estudante com id 1 não está mais presente no banco de dados após a deleção
+        assertFalse(studentDao.findById(1).isPresent());
     }
 
     @AfterEach
