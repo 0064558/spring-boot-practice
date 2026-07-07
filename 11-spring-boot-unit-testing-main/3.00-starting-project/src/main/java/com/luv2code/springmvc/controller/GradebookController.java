@@ -42,10 +42,15 @@ public class GradebookController {
         return "studentInformation";
     }
 
-    @DeleteMapping("delete/student/{id}")
+    @GetMapping("/delete/student/{id}")
     public String deleteStudent(@PathVariable int id) {
+
+        if (!studentAndGradeService.checkIfStudentIsNull(id)) {
+            return "error";
+        }
+
         studentAndGradeService.deleteStudent(id);
-        return "index";
+        return "redirect:/";
     }
 
 }

@@ -142,6 +142,22 @@ public class GradeBookControllerTest {
         assertFalse(studentDao.findById(1).isPresent());
     }
 
+    @Test
+    public void deleteStudentHttpRequestErrorPage() throws Exception {
+        // Verificando se o estudante com id 0 não está presente no banco de dados antes de tentar deletar
+        assertFalse(studentDao.findById(0).isPresent());
+
+        // Simulando uma requisição HTTP GET para o endpoint "/delete/student/{id}" do controlador e verificando se o status da resposta é 200 OK
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/delete/student/{id}", 0))
+                        .andExpect(status().isOk())
+                        .andReturn();
+
+        ModelAndView mav = mvcResult.getModelAndView();
+
+        ModelAndViewAssert.assertViewName(mav, "error");
+    }
+
     @AfterEach
     // Limpando o banco de dados após cada teste
     public void setupAfterTransaction() {
