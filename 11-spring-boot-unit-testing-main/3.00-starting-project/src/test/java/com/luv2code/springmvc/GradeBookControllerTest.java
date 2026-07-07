@@ -1,6 +1,8 @@
 package com.luv2code.springmvc;
 
 import com.luv2code.springmvc.models.CollegeStudent;
+import com.luv2code.springmvc.models.MathGrade;
+import com.luv2code.springmvc.repository.MathGradesDao;
 import com.luv2code.springmvc.repository.StudentDao;
 import com.luv2code.springmvc.service.StudentAndGradeService;
 import org.junit.jupiter.api.AfterEach;
@@ -47,6 +49,9 @@ public class GradeBookControllerTest {
 
     @Autowired
     private StudentDao studentDao;
+
+    @Autowired
+    private MathGradesDao mathGradesDao;
 
     // Mock do serviço StudentAndGradeServiceTest para ser usado nos testes do controlador
     @Mock
@@ -156,6 +161,18 @@ public class GradeBookControllerTest {
         ModelAndView mav = mvcResult.getModelAndView();
 
         ModelAndViewAssert.assertViewName(mav, "error");
+    }
+
+    @Test
+    public void createGradeService() {
+        // criar a nota
+        assertTrue(studentCreateServiceMock.createGrade(80.50, 1, "math"), "Create grade should return true");
+
+        // pegar as notas do estudante
+        Iterable<MathGrade> mathGrades = mathGradesDao.findGradeByStudentId(1);
+
+        // verificar se há notas
+        assertTrue(mathGrades.iterator().hasNext(), "Should have at least one math grade");
     }
 
     @AfterEach
