@@ -53,6 +53,9 @@ public class GradeBookControllerTest {
     @Autowired
     private MathGradesDao mathGradesDao;
 
+    @Autowired
+    private StudentAndGradeService studentAndGradeService;
+
     // Mock do serviço StudentAndGradeServiceTest para ser usado nos testes do controlador
     @Mock
     private StudentAndGradeService studentCreateServiceMock;
@@ -166,7 +169,7 @@ public class GradeBookControllerTest {
     @Test
     public void createGradeService() {
         // criar a nota
-        assertTrue(studentCreateServiceMock.createGrade(80.50, 1, "math"), "Create grade should return true");
+        assertTrue(studentAndGradeService.createGrade(80.50, 1, "math"));
 
         // pegar as notas do estudante
         Iterable<MathGrade> mathGrades = mathGradesDao.findGradeByStudentId(1);

@@ -1,9 +1,12 @@
 package com.luv2code.springmvc.service;
 
 import com.luv2code.springmvc.models.CollegeStudent;
+import com.luv2code.springmvc.models.MathGrade;
+import com.luv2code.springmvc.repository.MathGradesDao;
 import com.luv2code.springmvc.repository.StudentDao;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,7 +15,15 @@ import java.util.Optional;
 @Transactional
 public class StudentAndGradeService {
 
+    @Autowired
     StudentDao studentDao;
+
+    @Autowired
+    @Qualifier("mathGrades")
+    private MathGrade mathGrade;
+
+    @Autowired
+    private MathGradesDao mathGradesDao;
 
     // Injetando o StudentDao no construtor da classe StudentAndGradeService
     @Autowired
@@ -48,6 +59,19 @@ public class StudentAndGradeService {
     }
 
     public boolean createGrade(double grade, int studentId, String gradeType) {
+        if (!checkIfStudentIsNull(studentId)) {
+            return false;
+        }
+
+        if (grade >= 0 && grade <= 100) {
+            if (gradeType.equals("math")) {
+                mathGrade.setId(0);
+                mathGrade.setGrade(grade);
+                mathGrade.setStudentId(studentId);
+                mathGradesDao.save(mathGrade);
+                return true;
+            }
+        }
         return false;
     }
 }
