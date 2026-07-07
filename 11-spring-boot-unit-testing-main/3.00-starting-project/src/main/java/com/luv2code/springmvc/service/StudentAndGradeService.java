@@ -35,8 +35,6 @@ public class StudentAndGradeService {
         } else {
             return false;
         }
-
-
     }
 
     public void deleteStudent(int id) {
