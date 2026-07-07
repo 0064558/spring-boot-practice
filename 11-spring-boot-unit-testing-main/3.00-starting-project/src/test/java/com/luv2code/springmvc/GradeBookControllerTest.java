@@ -1,6 +1,7 @@
 package com.luv2code.springmvc;
 
 import com.luv2code.springmvc.models.CollegeStudent;
+import com.luv2code.springmvc.repository.StudentDao;
 import com.luv2code.springmvc.service.StudentAndGradeService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,6 +45,9 @@ public class GradeBookControllerTest {
     // MockMvc é usado para simular requisições HTTP para os endpoints do controlador durante os testes
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private StudentDao studentDao;
 
     // Mock do serviço StudentAndGradeServiceTest para ser usado nos testes do controlador
     @Mock
@@ -89,19 +94,23 @@ public class GradeBookControllerTest {
     }
 
     @Test
+    // Teste para criar um estudante via requisição HTTP POST e verificar se ele foi salvo corretamente no banco de dados
     public void createStudentHttpRequest() throws Exception {
-        // Simulando uma requisição HTTP POST para o endpoint "/studentInformation" do controlador com os parâmetros do estudante
         MvcResult mvcResult = this.mockMvc.perform(post("/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("firstName", request.getParameterValues("firstName"))
-                        .param("lastName", request.getParameterValues("lastName"))
-                        .param("email_address", request.getParameterValues("emailAddress")))
-                        .andExpect(status().isOk())
-                        .andReturn();
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("firstname", "Eric")
+                        .param("lastname", "Roby")
+                        .param("email_address", "eric.roby@luv2code_school.com"))
+                .andExpect(status().isOk())
+                .andReturn();
 
         ModelAndView mav = mvcResult.getModelAndView();
 
-        ModelAndViewAssert.assertViewName(mav, "studentInformation");
+        ModelAndViewAssert.assertViewName(mav, "index");
+
+        CollegeStudent verifyStudent = studentDao.findByEmailAddress("eric.roby@luv2code_school.com");
+
+        assertNotNull(verifyStudent, "Student should not be null");
     }
 
     @AfterEach
