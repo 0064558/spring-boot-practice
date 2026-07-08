@@ -1,9 +1,6 @@
 package com.luv2code.springmvc;
 
-import com.luv2code.springmvc.models.CollegeStudent;
-import com.luv2code.springmvc.models.HistoryGrade;
-import com.luv2code.springmvc.models.MathGrade;
-import com.luv2code.springmvc.models.ScienceGrade;
+import com.luv2code.springmvc.models.*;
 import com.luv2code.springmvc.repository.HistoryGradesDao;
 import com.luv2code.springmvc.repository.MathGradesDao;
 import com.luv2code.springmvc.repository.ScienceGradesDao;
@@ -87,16 +84,29 @@ public class StudentAndGradeServiceTest {
     public void deleteStudentService() {
         // Verificando se o estudante com id 1 está presente no banco de dados antes de deletar
         Optional<CollegeStudent> deletedStudent = studentDao.findById(1);
+        Optional<MathGrade> deletedMathGrade = mathGradesDao.findById(1);
+        Optional<ScienceGrade> deletedScienceGrade = scienceGradesDao.findById(1);
+        Optional<HistoryGrade> deletedHistoryGrade = historyGradesDao.findById(1);
+
         assertTrue(deletedStudent.isPresent(), "Return true if student is present");
+        assertTrue(deletedMathGrade.isPresent(), "Return true if math grade is present");
+        assertTrue(deletedScienceGrade.isPresent(), "Return true if science grade is present");
+        assertTrue(deletedHistoryGrade.isPresent(), "Return true if history grade is present");
 
         // Deletando o estudante com id 1 usando o serviço
         studentService.deleteStudent(1);
 
         // Verificando se o estudante com id 1 não está mais presente no banco de dados após a deleção
         deletedStudent = studentDao.findById(1);
+        deletedMathGrade = mathGradesDao.findById(1);
+        deletedScienceGrade = scienceGradesDao.findById(1);
+        deletedHistoryGrade = historyGradesDao.findById(1);
 
         // Verificando se o estudante foi deletado corretamente do banco de dados
         assertFalse(deletedStudent.isPresent(), "Return false if student is not present");
+        assertFalse(deletedMathGrade.isPresent(), "Return false if math grade is not present");
+        assertFalse(deletedScienceGrade.isPresent(), "Return false if science grade is not present");
+        assertFalse(deletedHistoryGrade.isPresent(), "Return false if history grade is not present");
     }
 
     @Sql("/insertData.sql")
@@ -158,6 +168,27 @@ public class StudentAndGradeServiceTest {
         assertEquals(0, studentService.deleteGrade(1, "literature"), "No student should have a id");
 
     }
+
+    @Test
+    // Teste para verificar se o método studentInformation está funcionando corretamente
+    public void studentIformationService() {
+        // Chamando o método studentInformation do serviço para recuperar as informações do estudante com id 1
+        GradebookCollegeStudent gradebookCollegeStudent = studentService.studentInformation(1);
+
+        // Verificando se o estudante com id 1 está presente no banco de dados
+        assertNotNull(gradebookCollegeStudent);
+        // Verificando se as informações do estudante estão corretas
+        assertEquals(1, gradebookCollegeStudent.getId());
+        assertEquals("Eric", gradebookCollegeStudent.getFirstname());
+        assertEquals("Roby", gradebookCollegeStudent.getLastname());
+        assertEquals("eric.roby@luv2code_school.com", gradebookCollegeStudent.getEmailAddress());
+        // Verificando se as listas de notas do estudante estão corretas
+        assertTrue(gradebookCollegeStudent.getStudentGrades().getMathGradeResults().size() == 1);
+        assertTrue(gradebookCollegeStudent.getStudentGrades().getScienceGradeResults().size() == 1);
+        assertTrue(gradebookCollegeStudent.getStudentGrades().getHistoryGradeResults().size() == 1);
+    }
+
+
 
     @AfterEach
     // Limpando o banco de dados após cada teste

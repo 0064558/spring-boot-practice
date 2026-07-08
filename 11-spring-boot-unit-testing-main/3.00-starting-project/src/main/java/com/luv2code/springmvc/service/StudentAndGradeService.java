@@ -1,9 +1,6 @@
 package com.luv2code.springmvc.service;
 
-import com.luv2code.springmvc.models.CollegeStudent;
-import com.luv2code.springmvc.models.HistoryGrade;
-import com.luv2code.springmvc.models.MathGrade;
-import com.luv2code.springmvc.models.ScienceGrade;
+import com.luv2code.springmvc.models.*;
 import com.luv2code.springmvc.repository.HistoryGradesDao;
 import com.luv2code.springmvc.repository.MathGradesDao;
 import com.luv2code.springmvc.repository.ScienceGradesDao;
@@ -13,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,6 +42,9 @@ public class StudentAndGradeService {
     @Autowired
     private HistoryGradesDao historyGradesDao;
 
+    @Autowired
+    private StudentGrades studentGrades;
+
     // Injetando o StudentDao no construtor da classe StudentAndGradeService
     @Autowired
     public StudentAndGradeService(StudentDao studentDao) {
@@ -69,6 +71,9 @@ public class StudentAndGradeService {
     public void deleteStudent(int id) {
         if (checkIfStudentIsNull(id)) {
             studentDao.deleteById(id);
+            mathGradesDao.deleteByStudentId(id);
+            scienceGradesDao.deleteByStudentId(id);
+            historyGradesDao.deleteByStudentId(id);
         }
     }
 
@@ -151,5 +156,33 @@ public class StudentAndGradeService {
         }
 
         return studentId;
+    }
+
+    // Método para obter as informações de um estudante específico, incluindo suas notas
+    public GradebookCollegeStudent studentInformation(int id) {
+        // Busca o estudante pelo ID
+        Optional<CollegeStudent> student = studentDao.findById(id);
+
+        Iterable<MathGrade> mathGrades = mathGradesDao.findGradeByStudentId(id);
+        Iterable<ScienceGrade> scienceGrades = scienceGradesDao.findGradeByStudentId(id);
+        Iterable<HistoryGrade> historyGrades = historyGradesDao.findGradeByStudentId(id);
+
+        // Converte os iteráveis de notas em listas para facilitar o acesso e manipulação
+        List<Grade> mathGradesList = new ArrayList<>();
+        mathGrades.forEach(mathGradesList::add);
+
+        List<Grade> scienceGradesList = new ArrayList<>();
+        scienceGrades.forEach(scienceGradesList::add);
+
+        List<Grade> historyGradesList = new ArrayList<>();
+        historyGrades.forEach(historyGradesList::add);
+
+        studentGrades.setMathGradeResults(mathGradesList);
+        studentGrades.setScienceGradeResults(scienceGradesList);
+        studentGrades.setHistoryGradeResults(historyGradesList);
+
+        GradebookCollegeStudent gradebookCollegeStudent = new GradebookCollegeStudent(student.get().getId(), student.get().getFirstname(), student.get().getLastname(), student.get().getEmailAddress(), studentGrades);
+
+        return gradebookCollegeStudent;
     }
 }

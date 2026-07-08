@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MathGradesDao extends JpaRepository<MathGrade, Integer> {
     public Iterable<MathGrade> findGradeByStudentId(int studentId);
+
+    public void deleteByStudentId(int id);
 }
