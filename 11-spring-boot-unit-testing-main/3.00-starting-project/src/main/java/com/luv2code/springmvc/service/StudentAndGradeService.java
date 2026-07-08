@@ -110,4 +110,24 @@ public class StudentAndGradeService {
         }
         return false;
     }
+
+    // Método para deletar uma nota de um estudante específico
+    public int deleteGrade(int id, String gradeType) {
+        int studentId = 0;
+
+        // Verifica o tipo de nota (matemática, ciência ou história) e deleta a nota correspondente
+        if (gradeType.equals("math")) {
+            // Busca a nota de matemática pelo ID e obtém o ID do estudante associado
+            Optional<MathGrade> grade = mathGradesDao.findById(id);
+            // Se a nota não existir, retorna o ID do estudante como 0
+            if (!grade.isPresent()) {
+                return studentId;
+            }
+            // Se a nota existir, obtém o ID do estudante associado e deleta a nota
+            studentId = grade.get().getStudentId();
+            mathGradesDao.deleteById(id);
+        }
+
+        return studentId;
+    }
 }
