@@ -195,6 +195,14 @@ public class GradeBookControllerTest {
         assertTrue(historyGrades.iterator().hasNext(), "Should have at least one history grade");
     }
 
+    @Test
+    public void createGradeServiceReturnFalse() {
+        assertFalse(studentAndGradeService.createGrade(105, 1, "math"));
+        assertFalse(studentAndGradeService.createGrade(-5, 1, "science"));
+        assertFalse(studentAndGradeService.createGrade(80.50, 9, "history"));
+        assertFalse(studentAndGradeService.createGrade(80.50, 1, "literature"));
+    }
+
     @AfterEach
     // Limpando o banco de dados após cada teste
     public void setupAfterTransaction() {
