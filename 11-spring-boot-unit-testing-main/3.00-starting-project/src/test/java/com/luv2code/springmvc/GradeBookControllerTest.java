@@ -13,6 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,30 @@ public class GradeBookControllerTest {
     @Mock
     private StudentAndGradeService studentCreateServiceMock;
 
+    @Value("${sql.script.create.student}")
+    private String sqlAddStudent;
+
+    @Value("${sql.script.create.math.grade}")
+    private String sqlAddMathGrade;
+
+    @Value("${sql.script.create.science.grade}")
+    private String sqlAddScienceGrade;
+
+    @Value("${sql.script.create.history.grade}")
+    private String sqlAddHystoryGrade;
+
+    @Value("${sql.script.delete.student}")
+    private String sqlDeleteStudent;
+
+    @Value("${sql.script.delete.math.grade}")
+    private String sqlDeleteMathGrade;
+
+    @Value("${sql.script.delete.science.grade}")
+    private String sqlDeleteScienceGrade;
+
+    @Value("${sql.script.delete.history.grade}")
+    private String sqlDeleteHistoryGrade;
+
     @BeforeAll
     public static void setup() {
         request = new MockHttpServletRequest();
@@ -81,10 +106,10 @@ public class GradeBookControllerTest {
     @BeforeEach
     // Configurando o banco de dados antes de cada teste
     public void beforeEach() {
-        jdbc.execute("insert into student(firstname, lastname, email_address) " +
-                "values ('Eric', 'Roby', 'eric.roby@luv2code_school.com')");
-
-
+        jdbc.execute(sqlAddStudent);
+        jdbc.execute(sqlAddMathGrade);
+        jdbc.execute(sqlAddScienceGrade);
+        jdbc.execute(sqlAddHystoryGrade);
     }
 
     @Test
@@ -170,8 +195,8 @@ public class GradeBookControllerTest {
         // Simulando uma requisição HTTP GET para o endpoint "/delete/student/{id}" do controlador e verificando se o status da resposta é 200 OK
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .delete("/delete/student/{id}", 0))
-                        .andExpect(status().isOk())
-                        .andReturn();
+                .andExpect(status().isOk())
+                .andReturn();
 
         ModelAndView mav = mvcResult.getModelAndView();
 
@@ -179,13 +204,12 @@ public class GradeBookControllerTest {
     }
 
 
-
     @AfterEach
     // Limpando o banco de dados após cada teste
     public void setupAfterTransaction() {
-        // Limpando as tabelas do banco de dados após cada teste para garantir que os testes sejam independentes e não afetem uns aos outros
-        jdbc.execute("delete from student");
-
-        jdbc.execute("alter table student alter column id restart with 1");
+        jdbc.execute(sqlDeleteMathGrade);
+        jdbc.execute(sqlDeleteScienceGrade);
+        jdbc.execute(sqlDeleteHistoryGrade);
+        jdbc.execute(sqlDeleteStudent);
     }
 }
