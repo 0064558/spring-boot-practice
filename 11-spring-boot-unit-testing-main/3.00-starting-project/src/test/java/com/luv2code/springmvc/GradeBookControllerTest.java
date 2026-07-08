@@ -1,8 +1,12 @@
 package com.luv2code.springmvc;
 
 import com.luv2code.springmvc.models.CollegeStudent;
+import com.luv2code.springmvc.models.HistoryGrade;
 import com.luv2code.springmvc.models.MathGrade;
+import com.luv2code.springmvc.models.ScienceGrade;
+import com.luv2code.springmvc.repository.HistoryGradesDao;
 import com.luv2code.springmvc.repository.MathGradesDao;
+import com.luv2code.springmvc.repository.ScienceGradesDao;
 import com.luv2code.springmvc.repository.StudentDao;
 import com.luv2code.springmvc.service.StudentAndGradeService;
 import org.junit.jupiter.api.AfterEach;
@@ -55,6 +59,12 @@ public class GradeBookControllerTest {
 
     @Autowired
     private StudentAndGradeService studentAndGradeService;
+
+    @Autowired
+    private ScienceGradesDao scienceGradesDao;
+
+    @Autowired
+    private HistoryGradesDao historyGradesDao;
 
     // Mock do serviço StudentAndGradeServiceTest para ser usado nos testes do controlador
     @Mock
@@ -167,15 +177,22 @@ public class GradeBookControllerTest {
     }
 
     @Test
+    // Teste para criar uma nota e verificar se ela foi salva corretamente no banco de dados
     public void createGradeService() {
         // criar a nota
         assertTrue(studentAndGradeService.createGrade(80.50, 1, "math"));
+        assertTrue(studentAndGradeService.createGrade(80.50, 1, "science"));
+        assertTrue(studentAndGradeService.createGrade(80.50, 1, "history"));
 
         // pegar as notas do estudante
         Iterable<MathGrade> mathGrades = mathGradesDao.findGradeByStudentId(1);
+        Iterable<ScienceGrade> scienceGrades = scienceGradesDao.findGradeByStudentId(1);
+        Iterable<HistoryGrade> historyGrades = historyGradesDao.findGradeByStudentId(1);
 
         // verificar se há notas
         assertTrue(mathGrades.iterator().hasNext(), "Should have at least one math grade");
+        assertTrue(scienceGrades.iterator().hasNext(), "Should have at least one science grade");
+        assertTrue(historyGrades.iterator().hasNext(), "Should have at least one history grade");
     }
 
     @AfterEach

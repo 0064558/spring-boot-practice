@@ -1,8 +1,12 @@
 package com.luv2code.springmvc.service;
 
 import com.luv2code.springmvc.models.CollegeStudent;
+import com.luv2code.springmvc.models.HistoryGrade;
 import com.luv2code.springmvc.models.MathGrade;
+import com.luv2code.springmvc.models.ScienceGrade;
+import com.luv2code.springmvc.repository.HistoryGradesDao;
 import com.luv2code.springmvc.repository.MathGradesDao;
+import com.luv2code.springmvc.repository.ScienceGradesDao;
 import com.luv2code.springmvc.repository.StudentDao;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +27,21 @@ public class StudentAndGradeService {
     private MathGrade mathGrade;
 
     @Autowired
+    @Qualifier("scienceGrades")
+    private ScienceGrade scienceGrade;
+
+    @Autowired
+    @Qualifier("historyGrades")
+    private HistoryGrade historyGrade;
+
+    @Autowired
     private MathGradesDao mathGradesDao;
+
+    @Autowired
+    private ScienceGradesDao scienceGradesDao;
+
+    @Autowired
+    private HistoryGradesDao historyGradesDao;
 
     // Injetando o StudentDao no construtor da classe StudentAndGradeService
     @Autowired
@@ -58,17 +76,35 @@ public class StudentAndGradeService {
         return studentDao.findAll();
     }
 
+    // Método para criar uma nota para um estudante específico
     public boolean createGrade(double grade, int studentId, String gradeType) {
+        // Verifica se o estudante existe no banco de dados antes de criar a nota
         if (!checkIfStudentIsNull(studentId)) {
             return false;
         }
 
+        // Verifica se a nota está dentro do intervalo válido (0 a 100)
         if (grade >= 0 && grade <= 100) {
+            // Verifica o tipo de nota (matemática ou ciência) e cria a nota correspondente
             if (gradeType.equals("math")) {
                 mathGrade.setId(0);
                 mathGrade.setGrade(grade);
                 mathGrade.setStudentId(studentId);
                 mathGradesDao.save(mathGrade);
+                return true;
+            }
+            if (gradeType.equals("science")) {
+                scienceGrade.setId(0);
+                scienceGrade.setGrade(grade);
+                scienceGrade.setStudentId(studentId);
+                scienceGradesDao.save(scienceGrade);
+                return true;
+            }
+            if (gradeType.equals("history")) {
+                historyGrade.setId(0);
+                historyGrade.setGrade(grade);
+                historyGrade.setStudentId(studentId);
+                historyGradesDao.save(historyGrade);
                 return true;
             }
         }
