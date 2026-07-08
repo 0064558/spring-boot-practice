@@ -152,6 +152,13 @@ public class StudentAndGradeServiceTest {
         assertEquals(1, studentService.deleteGrade(1, "history"), "Returns student id after delete");
     }
 
+    @Test
+    public void deleteGradeServiceReturnStudentIdOfZero() {
+        assertEquals(1, studentService.deleteGrade(1, "science"), "No student should have a id");
+        assertEquals(1, studentService.deleteGrade(1, "literature"), "No student should have a id");
+
+    }
+
     @AfterEach
     // Limpando o banco de dados após cada teste
     public void setupAfterTransaction() {
