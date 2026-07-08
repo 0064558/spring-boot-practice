@@ -127,6 +127,28 @@ public class StudentAndGradeService {
             studentId = grade.get().getStudentId();
             mathGradesDao.deleteById(id);
         }
+        if (gradeType.equals("science")) {
+            // Busca a nota de ciencia pelo ID e obtém o ID do estudante associado
+            Optional<ScienceGrade> grade = scienceGradesDao.findById(id);
+            // Se a nota não existir, retorna o ID do estudante como 0
+            if (!grade.isPresent()) {
+                return studentId;
+            }
+            // Se a nota existir, obtém o ID do estudante associado e deleta a nota
+            studentId = grade.get().getStudentId();
+            scienceGradesDao.deleteById(id);
+        }
+        if (gradeType.equals("history")) {
+            // Busca a nota de ciencia pelo ID e obtém o ID do estudante associado
+            Optional<HistoryGrade> grade = historyGradesDao.findById(id);
+            // Se a nota não existir, retorna o ID do estudante como 0
+            if (!grade.isPresent()) {
+                return studentId;
+            }
+            // Se a nota existir, obtém o ID do estudante associado e deleta a nota
+            studentId = grade.get().getStudentId();
+            historyGradesDao.deleteById(id);
+        }
 
         return studentId;
     }
