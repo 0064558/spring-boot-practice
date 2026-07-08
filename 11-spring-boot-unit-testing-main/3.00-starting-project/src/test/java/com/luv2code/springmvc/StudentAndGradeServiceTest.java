@@ -188,7 +188,15 @@ public class StudentAndGradeServiceTest {
         assertTrue(gradebookCollegeStudent.getStudentGrades().getHistoryGradeResults().size() == 1);
     }
 
+    @Test
+    // Teste para verificar se o método studentInformation retorna null quando o estudante não está presente no banco de dados
+    public void studentInformationServiceReturnNull() {
+        // Chamando o método studentInformation do serviço para recuperar as informações do estudante com id 0
+        GradebookCollegeStudent gradebookCollegeStudent = studentService.studentInformation(0);
 
+        // Verificando se o estudante com id 0 não está presente no banco de dados
+        assertNull(gradebookCollegeStudent);
+    }
 
     @AfterEach
     // Limpando o banco de dados após cada teste

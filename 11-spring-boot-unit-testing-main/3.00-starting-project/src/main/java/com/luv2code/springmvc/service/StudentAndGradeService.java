@@ -160,6 +160,11 @@ public class StudentAndGradeService {
 
     // Método para obter as informações de um estudante específico, incluindo suas notas
     public GradebookCollegeStudent studentInformation(int id) {
+
+        if (!checkIfStudentIsNull(id)) {
+            return null;
+        }
+
         // Busca o estudante pelo ID
         Optional<CollegeStudent> student = studentDao.findById(id);
 
