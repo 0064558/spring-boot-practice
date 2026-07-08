@@ -37,6 +37,10 @@ public class StudentAndGradeServiceTest {
     public void setupDatabase() {
         jdbc.execute("insert into student(firstname, lastname, email_address) " +
                 "values ('Eric', 'Roby', 'eric.roby@luv2code_school.com')");
+
+        jdbc.execute("insert into math_grade(student_id, grade) values (1, 100.00)");
+        jdbc.execute("insert into science_grade(student_id, grade) values (1, 100.00)");
+        jdbc.execute("insert into history_grade(student_id, grade) values (1, 100.00)");
     }
 
     @Test
@@ -98,7 +102,16 @@ public class StudentAndGradeServiceTest {
     @AfterEach
     // Limpando o banco de dados após cada teste
     public void setupAfterTransaction() {
+        // Limpando as tabelas do banco de dados após cada teste
         jdbc.execute("delete from student");
+        jdbc.execute("delete from math_grade");
+        jdbc.execute("delete from science_grade");
+        jdbc.execute("delete from history_grade");
+
+        // Resetando os IDs das tabelas de notas para 1 após cada teste
         jdbc.execute("alter table student alter column id restart with 1");
+        jdbc.execute("alter table math_grade alter column id restart with 1");
+        jdbc.execute("alter table science_grade alter column id restart with 1");
+        jdbc.execute("alter table history_grade alter column id restart with 1");
     }
 }

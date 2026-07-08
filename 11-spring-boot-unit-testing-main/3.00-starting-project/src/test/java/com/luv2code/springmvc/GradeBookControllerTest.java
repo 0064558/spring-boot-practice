@@ -83,6 +83,8 @@ public class GradeBookControllerTest {
     public void beforeEach() {
         jdbc.execute("insert into student(firstname, lastname, email_address) " +
                 "values ('Eric', 'Roby', 'eric.roby@luv2code_school.com')");
+
+
     }
 
     @Test
@@ -206,7 +208,9 @@ public class GradeBookControllerTest {
     @AfterEach
     // Limpando o banco de dados após cada teste
     public void setupAfterTransaction() {
+        // Limpando as tabelas do banco de dados após cada teste para garantir que os testes sejam independentes e não afetem uns aos outros
         jdbc.execute("delete from student");
+
         jdbc.execute("alter table student alter column id restart with 1");
     }
 }
