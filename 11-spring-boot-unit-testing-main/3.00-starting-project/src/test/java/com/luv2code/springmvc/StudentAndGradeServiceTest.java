@@ -1,6 +1,12 @@
 package com.luv2code.springmvc;
 
 import com.luv2code.springmvc.models.CollegeStudent;
+import com.luv2code.springmvc.models.HistoryGrade;
+import com.luv2code.springmvc.models.MathGrade;
+import com.luv2code.springmvc.models.ScienceGrade;
+import com.luv2code.springmvc.repository.HistoryGradesDao;
+import com.luv2code.springmvc.repository.MathGradesDao;
+import com.luv2code.springmvc.repository.ScienceGradesDao;
 import com.luv2code.springmvc.repository.StudentDao;
 import com.luv2code.springmvc.service.StudentAndGradeService;
 import org.junit.jupiter.api.AfterEach;
@@ -13,6 +19,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +38,17 @@ public class StudentAndGradeServiceTest {
     @Autowired
     private StudentDao studentDao;
 
+    @Autowired
+    private StudentAndGradeService studentAndGradeService;
+
+    @Autowired
+    private MathGradesDao mathGradesDao;
+
+    @Autowired
+    private ScienceGradesDao scienceGradesDao;
+
+    @Autowired
+    private HistoryGradesDao historyGradesDao;
 
     @BeforeEach
     // Configurando o banco de dados antes de cada teste
@@ -97,6 +115,33 @@ public class StudentAndGradeServiceTest {
 
         // Verificando se há apenas um estudante no banco de dados
         assertEquals(6, collegeStudents.size(), "Find one student");
+    }
+
+    @Test
+    // Teste para criar uma nota e verificar se ela foi salva corretamente no banco de dados
+    public void createGradeService() {
+        // criar a nota
+        assertTrue(studentAndGradeService.createGrade(80.50, 1, "math"));
+        assertTrue(studentAndGradeService.createGrade(80.50, 1, "science"));
+        assertTrue(studentAndGradeService.createGrade(80.50, 1, "history"));
+
+        // pegar as notas do estudante
+        Iterable<MathGrade> mathGrades = mathGradesDao.findGradeByStudentId(1);
+        Iterable<ScienceGrade> scienceGrades = scienceGradesDao.findGradeByStudentId(1);
+        Iterable<HistoryGrade> historyGrades = historyGradesDao.findGradeByStudentId(1);
+
+        // verificar se há notas
+        assertTrue(((Collection<MathGrade>) mathGrades).size() == 2, "Should have at least one math grade");
+        assertTrue(((Collection<ScienceGrade>) scienceGrades).size() == 2, "Should have at least one science grade");
+        assertTrue(((Collection<HistoryGrade>) historyGrades).size() == 2, "Should have at least one history grade");
+    }
+
+    @Test
+    public void createGradeServiceReturnFalse() {
+        assertFalse(studentAndGradeService.createGrade(105, 1, "math"));
+        assertFalse(studentAndGradeService.createGrade(-5, 1, "science"));
+        assertFalse(studentAndGradeService.createGrade(80.50, 9, "history"));
+        assertFalse(studentAndGradeService.createGrade(80.50, 1, "literature"));
     }
 
     @AfterEach

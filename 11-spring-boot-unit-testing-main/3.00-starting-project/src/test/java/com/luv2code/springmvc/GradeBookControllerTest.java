@@ -178,32 +178,7 @@ public class GradeBookControllerTest {
         ModelAndViewAssert.assertViewName(mav, "error");
     }
 
-    @Test
-    // Teste para criar uma nota e verificar se ela foi salva corretamente no banco de dados
-    public void createGradeService() {
-        // criar a nota
-        assertTrue(studentAndGradeService.createGrade(80.50, 1, "math"));
-        assertTrue(studentAndGradeService.createGrade(80.50, 1, "science"));
-        assertTrue(studentAndGradeService.createGrade(80.50, 1, "history"));
 
-        // pegar as notas do estudante
-        Iterable<MathGrade> mathGrades = mathGradesDao.findGradeByStudentId(1);
-        Iterable<ScienceGrade> scienceGrades = scienceGradesDao.findGradeByStudentId(1);
-        Iterable<HistoryGrade> historyGrades = historyGradesDao.findGradeByStudentId(1);
-
-        // verificar se há notas
-        assertTrue(mathGrades.iterator().hasNext(), "Should have at least one math grade");
-        assertTrue(scienceGrades.iterator().hasNext(), "Should have at least one science grade");
-        assertTrue(historyGrades.iterator().hasNext(), "Should have at least one history grade");
-    }
-
-    @Test
-    public void createGradeServiceReturnFalse() {
-        assertFalse(studentAndGradeService.createGrade(105, 1, "math"));
-        assertFalse(studentAndGradeService.createGrade(-5, 1, "science"));
-        assertFalse(studentAndGradeService.createGrade(80.50, 9, "history"));
-        assertFalse(studentAndGradeService.createGrade(80.50, 1, "literature"));
-    }
 
     @AfterEach
     // Limpando o banco de dados após cada teste
