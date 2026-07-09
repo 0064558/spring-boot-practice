@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.spring6.expression.Mvc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -240,10 +241,10 @@ public class GradeBookControllerTest {
         assertEquals(1, student.getStudentGrades().getMathGradeResults().size());
 
         MvcResult mvcResult = this.mockMvc.perform(post("/grades")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("grade", "85.50")
-                        .param("gradeType", "math")
-                        .param("studentId", "1")).andExpect(status().isOk()).andReturn();
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("grade", "85.50")
+                .param("gradeType", "math")
+                .param("studentId", "1")).andExpect(status().isOk()).andReturn();
 
         ModelAndView mav = mvcResult.getModelAndView();
 
@@ -252,6 +253,32 @@ public class GradeBookControllerTest {
         student = studentService.studentInformation(1);
 
         assertEquals(2, student.getStudentGrades().getMathGradeResults().size());
+    }
+
+    @Test
+    public void createAValidGradeHttpRequestStudentDoesNotExistEmptyResponse() throws Exception {
+        MvcResult result = this.mockMvc.perform(post("/grades")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("grade", "85.50")
+                .param("gradeType", "history")
+                .param("studentId", "0")).andExpect(status().isOk()).andReturn();
+
+        ModelAndView mav = result.getModelAndView();
+
+        ModelAndViewAssert.assertViewName(mav, "error");
+    }
+
+    @Test
+    public void createANonValidGradeHttpRequestGradeTypeDoesNotExistEmptyResponse() throws Exception {
+        MvcResult result = this.mockMvc.perform(post("/grades")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("grade", "85.50")
+                .param("gradeType", "literature")
+                .param("studentId", "1")).andExpect(status().isOk()).andReturn();
+
+        ModelAndView mav = result.getModelAndView();
+
+        ModelAndViewAssert.assertViewName(mav, "error");
     }
 
     @AfterEach
