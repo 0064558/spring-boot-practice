@@ -1,9 +1,6 @@
 package com.luv2code.springmvc;
 
-import com.luv2code.springmvc.models.CollegeStudent;
-import com.luv2code.springmvc.models.HistoryGrade;
-import com.luv2code.springmvc.models.MathGrade;
-import com.luv2code.springmvc.models.ScienceGrade;
+import com.luv2code.springmvc.models.*;
 import com.luv2code.springmvc.repository.HistoryGradesDao;
 import com.luv2code.springmvc.repository.MathGradesDao;
 import com.luv2code.springmvc.repository.ScienceGradesDao;
@@ -25,6 +22,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.ModelAndViewAssert;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -66,6 +65,9 @@ public class GradeBookControllerTest {
 
     @Autowired
     private HistoryGradesDao historyGradesDao;
+
+    @Autowired
+    private StudentAndGradeService studentService;
 
     // Mock do serviço StudentAndGradeServiceTest para ser usado nos testes do controlador
     @Mock
@@ -228,6 +230,31 @@ public class GradeBookControllerTest {
 
         ModelAndViewAssert.assertViewName(mav, "error");
     }
+
+
+    @Test
+    public void createValidGradeHttpRequest() throws Exception {
+        assertTrue(studentDao.findById(1).isPresent());
+
+        GradebookCollegeStudent student = studentService.studentInformation(1);
+
+        assertEquals(1, student.getStudentGrades().getMathGradeResults().size());
+
+        MvcResult mvcResult = this.mockMvc.perform(post("/grades")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("grade", "85.50")
+                        .param("gradeType", "math")
+                        .param("studentId", "1")).andExpect(status().isOk()).andReturn();
+
+        ModelAndView mav = mvcResult.getModelAndView();
+
+        ModelAndViewAssert.assertViewName(mav, "studentInformation");
+
+        student = studentService.studentInformation(1);
+
+        assertEquals(2, student.getStudentGrades().getMathGradeResults().size());
+    }
+
 
     @AfterEach
     // Limpando o banco de dados após cada teste
