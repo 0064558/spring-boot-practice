@@ -7,7 +7,6 @@ import com.luv2code.springmvc.repository.ScienceGradesDao;
 import com.luv2code.springmvc.repository.StudentDao;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -21,18 +20,6 @@ public class StudentAndGradeService {
 
     @Autowired
     StudentDao studentDao;
-
-    @Autowired
-    @Qualifier("mathGrades")
-    private MathGrade mathGrade;
-
-    @Autowired
-    @Qualifier("scienceGrades")
-    private ScienceGrade scienceGrade;
-
-    @Autowired
-    @Qualifier("historyGrades")
-    private HistoryGrade historyGrade;
 
     @Autowired
     private MathGradesDao mathGradesDao;
@@ -93,21 +80,21 @@ public class StudentAndGradeService {
         if (grade >= 0 && grade <= 100) {
             // Verifica o tipo de nota (matemática ou ciência) e cria a nota correspondente
             if (gradeType.equals("math")) {
-                mathGrade.setId(0);
+                MathGrade mathGrade = new MathGrade();
                 mathGrade.setGrade(grade);
                 mathGrade.setStudentId(studentId);
                 mathGradesDao.save(mathGrade);
                 return true;
             }
             if (gradeType.equals("science")) {
-                scienceGrade.setId(0);
+                ScienceGrade scienceGrade = new ScienceGrade();
                 scienceGrade.setGrade(grade);
                 scienceGrade.setStudentId(studentId);
                 scienceGradesDao.save(scienceGrade);
                 return true;
             }
             if (gradeType.equals("history")) {
-                historyGrade.setId(0);
+                HistoryGrade historyGrade = new HistoryGrade();
                 historyGrade.setGrade(grade);
                 historyGrade.setStudentId(studentId);
                 historyGradesDao.save(historyGrade);

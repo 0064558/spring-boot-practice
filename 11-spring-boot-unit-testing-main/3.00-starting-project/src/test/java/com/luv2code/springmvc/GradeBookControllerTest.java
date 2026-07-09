@@ -18,15 +18,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.ModelAndViewAssert;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.servlet.ModelAndView;
-import org.thymeleaf.spring6.expression.Mvc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +34,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@TestPropertySource("/application.properties")
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest
 public class GradeBookControllerTest {
@@ -327,6 +324,8 @@ public class GradeBookControllerTest {
 
         ModelAndViewAssert.assertViewName(mav, "error");
     }
+
+
 
     @AfterEach
     // Limpando o banco de dados após cada teste
