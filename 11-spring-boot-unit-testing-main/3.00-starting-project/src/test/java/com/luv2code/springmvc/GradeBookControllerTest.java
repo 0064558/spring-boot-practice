@@ -30,6 +30,7 @@ import org.thymeleaf.spring6.expression.Mvc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -280,6 +281,27 @@ public class GradeBookControllerTest {
 
         ModelAndViewAssert.assertViewName(mav, "error");
     }
+
+    @Test
+    public void deleteAValidGradeHttRequest() throws Exception {
+        Optional<MathGrade> mathGrade = mathGradesDao.findById(1);
+
+        assertTrue(mathGrade.isPresent());
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/grades/{id}/{gradeType}", 1, "math"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        ModelAndView mav = mvcResult.getModelAndView();
+
+        ModelAndViewAssert.assertViewName(mav, "studentInformation");
+
+        mathGrade = mathGradesDao.findById(1);
+
+        assertFalse(mathGrade.isPresent());
+    }
+
+
 
     @AfterEach
     // Limpando o banco de dados após cada teste
