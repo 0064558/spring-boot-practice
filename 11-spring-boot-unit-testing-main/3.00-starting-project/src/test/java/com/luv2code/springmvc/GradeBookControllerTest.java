@@ -231,7 +231,6 @@ public class GradeBookControllerTest {
         ModelAndViewAssert.assertViewName(mav, "error");
     }
 
-
     @Test
     public void createValidGradeHttpRequest() throws Exception {
         assertTrue(studentDao.findById(1).isPresent());
@@ -254,7 +253,6 @@ public class GradeBookControllerTest {
 
         assertEquals(2, student.getStudentGrades().getMathGradeResults().size());
     }
-
 
     @AfterEach
     // Limpando o banco de dados após cada teste
