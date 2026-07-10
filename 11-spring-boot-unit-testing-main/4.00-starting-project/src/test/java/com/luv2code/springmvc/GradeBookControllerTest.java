@@ -195,12 +195,16 @@ public class GradeBookControllerTest {
                 .andExpect(jsonPath("$.message", is("Student or Grade was not found")));
     }
 
+    // Teste para obter informações de um estudante via requisição HTTP
     @Test
     public void studentInformationHttpRequest() throws Exception {
+        // Verificando se o estudante com o ID 1 existe no banco de dados antes de realizar a requisição
         Optional<CollegeStudent> student = studentDao.findById(1);
 
+        // Verificando se o estudante está presente no banco de dados, garantindo que a requisição para obter informações do estudante seja válida
         assertTrue(student.isPresent(), "Student should be present in the database");
 
+        // Simulando uma requisição GET para o endpoint "/studentInformation/{id}" com ID 1 e verificando se o status da resposta é OK (200), se o tipo de conteúdo é JSON UTF-8 e se os campos do objeto JSON retornado correspondem aos valores esperados
         mockMvc.perform(MockMvcRequestBuilders.get("/studentInformation/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(String.valueOf(APPLICATION_JSON_UTF8)))
@@ -208,6 +212,20 @@ public class GradeBookControllerTest {
                 .andExpect(jsonPath("$.firstname", is("Eric")))
                 .andExpect(jsonPath("$.lastname", is("Roby")))
                 .andExpect(jsonPath("$.emailAddress", is("eric.roby@luv2code_school.com")));
+    }
+
+    // Teste para obter informações de um estudante via requisição HTTP, esperando uma página de erro caso o estudante não exista
+    @Test
+    public void studentInformationHttpRequestEmptyResponse() throws Exception {
+
+        // Verificando se o estudante com o ID 0 não existe no banco de dados antes de realizar a requisição
+        assertFalse(studentDao.findById(0).isPresent(), "Student should not be present in the database");
+
+        // Simulando uma requisição GET para o endpoint "/studentInformation/{id}" com ID 0 e verificando se o status da resposta é um erro 4xx, se o status retornado é 404 e se a mensagem de erro é "Student or Grade was not found"
+        mockMvc.perform(MockMvcRequestBuilders.get("/studentInformation/{id}", 0))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.status", is(404)))
+                .andExpect(jsonPath("$.message", is("Student or Grade was not found")));
     }
 
     // Limpeza do banco de dados após cada teste, removendo os dados inseridos durante a configuração
