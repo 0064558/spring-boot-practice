@@ -262,6 +262,20 @@ public class GradeBookControllerTest {
                 .andExpect(jsonPath("$.message", is("Student or Grade was not found")));
     }
 
+    @Test
+    public void createGradeHttpRequestGradeTypeDoensExist() throws Exception {
+
+        // Simulando uma requisição POST para o endpoint "/grades" com param gradeType inválida e verificando se o status da resposta é um erro 4xx
+        mockMvc.perform(MockMvcRequestBuilders.post("/grades")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("grade", "60.0")
+                        .param("gradeType", "literature")
+                        .param("studentId", "1"))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.status", is(404)))
+                .andExpect(jsonPath("$.message", is("Student or Grade was not found")));
+    }
+
     // Limpeza do banco de dados após cada teste, removendo os dados inseridos durante a configuração
     @AfterEach
     public void setupAfterTransaction() {
