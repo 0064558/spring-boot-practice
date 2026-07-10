@@ -301,6 +301,7 @@ public class GradeBookControllerTest {
                 .andExpect(jsonPath("$.message", is("Student or Grade was not found")));
     }
 
+    // Teste para deletar uma nota via requisição HTTP, esperando uma página de erro caso o gradeType não exista
     @Test
     public void deleteInvalidGradeTypeHttRequest() throws Exception {
         // Simula uma requisição DELETE para o endpoint "/grades/{id}/{gradeType}" com ID inexistente e tipo de nota "math", esperando um erro 4xx, status 404 e mensagem de erro "Student or Grade was not found"
