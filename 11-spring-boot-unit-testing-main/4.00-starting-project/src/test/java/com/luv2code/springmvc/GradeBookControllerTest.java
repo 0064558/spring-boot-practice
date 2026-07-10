@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -161,6 +162,7 @@ public class GradeBookControllerTest {
         assertNotNull(verifyStudent, "Student should be in the database");
     }
 
+    // Teste para deletar um estudante via requisição HTTP
     @Test
     public void deleteStudentHttpRequest() throws Exception {
         int id = 1;
@@ -176,6 +178,19 @@ public class GradeBookControllerTest {
 
         // Verificando se o estudante com o ID especificado não existe mais no banco de dados após a exclusão
         assertFalse(studentDao.findById(id).isPresent());
+    }
+
+    // Teste para deletar um estudante via requisição HTTP, esperando uma página de erro caso o estudante não exista
+    @Test
+    public void deleteStudentHttpRequestErrorPage() throws Exception {
+        // Verificando se o estudante com o ID 0 não existe no banco de dados antes de realizar a exclusão
+        assertFalse(studentDao.findById(0).isPresent());
+
+        // Simulando uma requisição DELETE para o endpoint "/student/{id}" com ID 0 e verificando se o status da resposta é um erro 4xx, se o status retornado é 404 e se a mensagem de erro é "Student or Grade was not found"
+        mockMvc.perform(MockMvcRequestBuilders.delete("/student/{id}", 0))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.status", is(404)))
+                .andExpect(jsonPath("$.message", is("Student or Grade was not found")));
     }
 
     // Limpeza do banco de dados após cada teste, removendo os dados inseridos durante a configuração
