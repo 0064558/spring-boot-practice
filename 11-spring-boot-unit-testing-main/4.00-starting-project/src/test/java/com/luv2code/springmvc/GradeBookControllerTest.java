@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -142,6 +142,7 @@ public class GradeBookControllerTest {
     // Teste para criar um estudante via requisição HTTP
     @Test
     public void createStudentHttpRequest() throws Exception {
+        // Criando um novo objeto CollegeStudent e definindo seus atributos
         student.setFirstname("Rodrigo");
         student.setLastname("Alexandre Alves");
         student.setEmailAddress("rodrigo.alexandre@luv2code_school.com");
@@ -149,14 +150,32 @@ public class GradeBookControllerTest {
         // Simulando uma requisição POST para o endpoint "/" com o objeto CollegeStudent convertido em JSON e verificando se o status da resposta é OK (200) e se o tipo de conteúdo é JSON UTF-8 e se o tamanho do array JSON retornado é 2
         mockMvc.perform(post("/")
                         .contentType(MediaType.APPLICATION_JSON)
+                        // Convertendo o objeto CollegeStudent em JSON usando o ObjectMapper e adicionando ao corpo da requisição
                         .content(objectMapper.writeValueAsString(student)))
-                        .andExpect(status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
 
         // Verificando se o estudante foi realmente inserido no banco de dados, buscando pelo endereço de e-mail e garantindo que o objeto retornado não seja nulo
         CollegeStudent verifyStudent = studentDao.findByEmailAddress("rodrigo.alexandre@luv2code_school.com");
         // Asserting that the student is not null, indicating that it was successfully added to the database
         assertNotNull(verifyStudent, "Student should be in the database");
+    }
+
+    @Test
+    public void deleteStudentHttpRequest() throws Exception {
+        int id = 1;
+
+        // Verificando se o estudante com o ID especificado existe no banco de dados antes de realizar a exclusão
+        assertTrue(studentDao.findById(id).isPresent());
+
+        // Simulando uma requisição DELETE para o endpoint "/student/{id}" e verificando se o status da resposta é OK (200), se o tipo de conteúdo é JSON UTF-8 e se o tamanho do array JSON retornado é 0
+        mockMvc.perform(MockMvcRequestBuilders.delete("/student/{id}", id))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(String.valueOf(APPLICATION_JSON_UTF8)))
+                .andExpect(jsonPath("$", hasSize(0)));
+
+        // Verificando se o estudante com o ID especificado não existe mais no banco de dados após a exclusão
+        assertFalse(studentDao.findById(id).isPresent());
     }
 
     // Limpeza do banco de dados após cada teste, removendo os dados inseridos durante a configuração
