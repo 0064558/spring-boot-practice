@@ -228,6 +228,23 @@ public class GradeBookControllerTest {
                 .andExpect(jsonPath("$.message", is("Student or Grade was not found")));
     }
 
+    // Teste para criar uma nota via requisição HTTP
+    @Test
+    public void createGradeHttpRequest() throws Exception {
+        // Simulando uma requisição POST para o endpoint "/grades" com os parâmetros de nota, tipo de nota e ID do estudante, e verificando se o status da resposta é OK (200), se o tipo de conteúdo é JSON UTF-8 e se os campos do objeto JSON retornado correspondem aos valores esperados
+        mockMvc.perform(MockMvcRequestBuilders.post("/grades")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("grade", "90.5")
+                        .param("gradeType", "math")
+                        .param("studentId", "1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.firstname", is("Eric")))
+                .andExpect(jsonPath("$.lastname", is("Roby")))
+                .andExpect(jsonPath("$.emailAddress", is("eric.roby@luv2code_school.com")));
+    }
+
     // Limpeza do banco de dados após cada teste, removendo os dados inseridos durante a configuração
     @AfterEach
     public void setupAfterTransaction() {
