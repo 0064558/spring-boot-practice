@@ -242,7 +242,24 @@ public class GradeBookControllerTest {
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.firstname", is("Eric")))
                 .andExpect(jsonPath("$.lastname", is("Roby")))
-                .andExpect(jsonPath("$.emailAddress", is("eric.roby@luv2code_school.com")));
+                .andExpect(jsonPath("$.emailAddress", is("eric.roby@luv2code_school.com")))
+                .andExpect(jsonPath("$.studentGrades.mathGradeResults", hasSize(2)));
+    }
+
+    @Test
+    public void createGradeHttpRequestStudentDoensExist() throws Exception {
+        // Verificando se o estudante com o ID 0 não existe no banco de dados antes de realizar a exclusão
+        assertFalse(studentDao.findById(0).isPresent(), "Student should not be present in the database");
+
+        // Simulando uma requisição POST para o endpoint "/grades" com param ID 0 e verificando se o status da resposta é um erro 4xx
+        mockMvc.perform(MockMvcRequestBuilders.post("/grades")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("grade", "60.0")
+                        .param("gradeType", "math")
+                        .param("studentId", "0"))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.status", is(404)))
+                .andExpect(jsonPath("$.message", is("Student or Grade was not found")));
     }
 
     // Limpeza do banco de dados após cada teste, removendo os dados inseridos durante a configuração
