@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// Controlador para gerenciar o livro de notas
 @RestController
 public class GradebookController {
 
@@ -19,7 +20,6 @@ public class GradebookController {
 
     @Autowired
     private Gradebook gradebook;
-
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public List<GradebookCollegeStudent> getStudents() {

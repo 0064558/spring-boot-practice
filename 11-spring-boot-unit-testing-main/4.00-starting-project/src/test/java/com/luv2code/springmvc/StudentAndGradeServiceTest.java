@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestPropertySource("/application-test.properties")
 @SpringBootTest
+// Testes de integração para o serviço StudentAndGradeService
 public class StudentAndGradeServiceTest {
 
     @Autowired
@@ -84,7 +85,6 @@ public class StudentAndGradeServiceTest {
 
         assertFalse(studentService.checkIfStudentIsNull(0), "No student should have 0 id : return false");
     }
-
 
     @Test
     public void createStudentService() {
