@@ -276,6 +276,22 @@ public class GradeBookControllerTest {
                 .andExpect(jsonPath("$.message", is("Student or Grade was not found")));
     }
 
+    @Test
+    public void deleteGradeHttpRequest() throws Exception {
+        assertTrue(mathGradeDao.findById(1).isPresent(), "Math grade should be present in the database");
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/grades/{id}/{gradeType}", 1, "math"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.firstname", is("Eric")))
+                .andExpect(jsonPath("$.lastname", is("Roby")))
+                .andExpect(jsonPath("$.emailAddress", is("eric.roby@luv2code_school.com")))
+                .andExpect(jsonPath("$.studentGrades.mathGradeResults", hasSize(0)));
+    }
+
+
+
     // Limpeza do banco de dados após cada teste, removendo os dados inseridos durante a configuração
     @AfterEach
     public void setupAfterTransaction() {
