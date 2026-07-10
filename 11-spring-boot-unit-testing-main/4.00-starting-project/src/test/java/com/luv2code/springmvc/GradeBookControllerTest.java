@@ -301,6 +301,15 @@ public class GradeBookControllerTest {
                 .andExpect(jsonPath("$.message", is("Student or Grade was not found")));
     }
 
+    @Test
+    public void deleteInvalidGradeTypeHttRequest() throws Exception {
+        // Simula uma requisição DELETE para o endpoint "/grades/{id}/{gradeType}" com ID inexistente e tipo de nota "math", esperando um erro 4xx, status 404 e mensagem de erro "Student or Grade was not found"
+        mockMvc.perform(MockMvcRequestBuilders.delete("/grades/{id}/{gradeType}", 1, "literature"))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.status", is(404)))
+                .andExpect(jsonPath("$.message", is("Student or Grade was not found")));
+    }
+
     // Limpeza do banco de dados após cada teste, removendo os dados inseridos durante a configuração
     @AfterEach
     public void setupAfterTransaction() {
